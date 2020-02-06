@@ -109,7 +109,7 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/adhawk/airtable-java")
             credentials {
-                username = System.getenv("REPO_USERNAME")
+                username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("REPO_PASSWORD")
             }
         }
