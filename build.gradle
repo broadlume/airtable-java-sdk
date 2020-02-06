@@ -5,22 +5,10 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  */
 
-/*
- * Gets the version name from the latest Git tag
- */
-def getVersionName = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'describe', '--tags'
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    }
-    catch (ignored) {
-        return version;
-    }
-}
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.palantir.jacoco-coverage'
 
 buildscript {
     repositories {
@@ -34,18 +22,16 @@ buildscript {
    }
 }
 
-allprojects {
-    repositories {
-        jcenter()
-    }
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.palantir.jacoco-coverage'
+repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+    maven { url "http://dl.bintray.com/typesafe/maven-releases" }
 }
 
 group = 'com.sybit'
-version = getVersionName()
+version = '1.0.0'
 
 description = """com.sybit airtable"""
 
@@ -71,14 +57,6 @@ sourceSets {
   test {
     resources.srcDir file('src/itest/resources')
   }
-}
-
-repositories {
-    mavenLocal()
-    jcenter()
-    mavenCentral()
-    maven { url "https://jitpack.io" }
-    maven { url "http://dl.bintray.com/typesafe/maven-releases" }
 }
 
 configurations {
