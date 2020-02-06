@@ -82,7 +82,6 @@ repositories {
 }
 
 configurations {
-    codacy
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
 }
@@ -99,8 +98,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version:'2.23.2'
     testCompile group: 'org.slf4j', name: 'slf4j-jdk14', version:'1.7.26'
-
-    codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 }
 
 // custom tasks for creating source jar
@@ -117,19 +114,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 // add javadoc/source jar tasks as artifacts
 artifacts {
     archives sourcesJar, javadocJar
-}
-
-//task to send coverage data to Codacy
-task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
-    main = "com.codacy.CodacyCoverageReporter"
-    classpath = configurations.codacy
-    args = [
-            "report",
-            "-l",
-            "Java",
-            "-r",
-            "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-    ]
 }
 
 task integrationTest(type: Test) {
@@ -171,4 +155,3 @@ publishing {
 }
 
 integrationTest.mustRunAfter test
-
