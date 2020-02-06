@@ -30,10 +30,10 @@ repositories {
     maven { url "http://dl.bintray.com/typesafe/maven-releases" }
 }
 
-group = 'com.sybit'
+group = 'com.tryadhawk'
 version = '1.0.0'
 
-description = """com.sybit airtable"""
+description = """com.tryadhawk airtable"""
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -104,9 +104,18 @@ task integrationTest(type: Test) {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/adhawk/airtable-java")
+            credentials {
+                username = System.getenv("REPO_USERNAME")
+                password = System.getenv("REPO_PASSWORD")
+            }
+        }
+    }
     publications {
-
-        MyPublication(MavenPublication) {
+        maven(MavenPublication) {
             //we have to change scope from runtime to compile. Especially for Gson-lib.
             pom.withXml {
                 asNode().dependencies.'*'.findAll() {
@@ -116,19 +125,12 @@ publishing {
                 }.each { it.scope*.value = 'compile' }
             }
 
-            if (plugins.hasPlugin('war')) {
-                from components.web
-            } else {
-                from components.java
-            }
-            groupId group
             artifactId rootProject.name
-            version getVersionName()
 
+            from components.java
             artifact sourcesJar
             artifact javadocJar
         }
-
     }
 }
 
