@@ -6,7 +6,6 @@
  */
 package com.sybit.airtable.vo;
 
-
 /**
  *
  * @author fzr
@@ -14,7 +13,11 @@ package com.sybit.airtable.vo;
  */
 public class PostRecord<T> {
     
-    private T fields;
+    private final T fields;
+
+    public PostRecord(T fields) {
+        this.fields = fields;
+    }
 
     /**
      * @return the fields
@@ -22,13 +25,4 @@ public class PostRecord<T> {
     public T getFields() {
         return fields;
     }
-
-    /**
-     * @param fields the fields to set
-     */
-    public void setFields(T fields) {
-        this.fields = fields;
-    }
-    
-    
 }

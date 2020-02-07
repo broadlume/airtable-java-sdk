@@ -33,7 +33,7 @@ public class TableCreateRecordTest extends WireMockBaseTest  {
         Movie newMovie = new Movie();       
         newMovie.setName("Neuer Film");       
            
-        List<Attachment> photos = new ArrayList<Attachment>();
+        List<Attachment> photos = new ArrayList<>();
         Attachment photo1 = new Attachment();
         
         photo1.setUrl("https://www.example.imgae.file1.de");
@@ -88,7 +88,7 @@ public class TableCreateRecordTest extends WireMockBaseTest  {
         Movie newMovie = new Movie();
         
         newMovie.setName("Neuer Film");
-        List<Attachment> photos = new ArrayList<Attachment>();
+        List<Attachment> photos = new ArrayList<>();
         Attachment photo1 = new Attachment();
         Attachment photo2 = new Attachment();
         photo1.setUrl("https://www.example.imgae.file1.de");

@@ -538,8 +538,7 @@ public class Table<T> {
 
         checkProperties(item);
 
-        PostRecord body = new PostRecord<>();
-        body.setFields(item);
+        PostRecord<T> body = new PostRecord<>(item);
 
         HttpResponse<RecordItem> response;
         try {
@@ -589,8 +588,7 @@ public class Table<T> {
 
         String id = getIdOfItem(item);
 
-        PostRecord body = new PostRecord<>();
-        body.setFields(filterFields(item));
+        PostRecord<T> body = new PostRecord<>(filterFields(item));
 
         HttpResponse<RecordItem> response;
         try {
@@ -812,6 +810,7 @@ public class Table<T> {
      * @throws InvocationTargetException
      * @throws NoSuchMethodException
      */
+    @SuppressWarnings("unchecked")
     private void checkProperties(T item) throws AirtableException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
         if (propertyExists(item, FIELD_ID) || propertyExists(item, FIELD_CREATED_TIME)) {

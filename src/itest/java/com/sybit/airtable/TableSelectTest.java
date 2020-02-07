@@ -45,7 +45,7 @@ public class TableSelectTest extends WireMockBaseTest {
     @Test
     public void testSelectTableSorted() throws AirtableException, HttpResponseException {
 
-        Table table = base.table("Movies", Movie.class);
+        Table<Movie> table = base.table("Movies", Movie.class);
 
         List<Movie> retval = table.select(new Sort("Name", Sort.Direction.asc));
         assertNotNull(retval);

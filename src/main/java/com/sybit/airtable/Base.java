@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Representation Class of Airtable Base.
@@ -22,7 +23,7 @@ public class Base {
 
     private static final Logger LOG = LoggerFactory.getLogger( Base.class );
 
-    private final Map<String, Table> tableMap = new HashMap<>();
+    private final Map<TableKey, Table<?>> tableMap = new HashMap<>();
 
     private final String baseName;
 
@@ -56,7 +57,7 @@ public class Base {
      * @param name Name of required table.
      * @return Object to access table.
      */
-    public Table table(String name) {
+    public Table<Records> table(String name) {
         return table(name, Records.class);
     }
 
@@ -66,18 +67,18 @@ public class Base {
      * @param clazz Class representing row of resultsets
      * @return Object to access table.
      */
-    public Table table(String name, Class clazz) {
-        assert name != null : "name was null";
-        assert clazz != null : "clazz was null";
-
-        if(!tableMap.containsKey(name)) {
+    @SuppressWarnings("unchecked")
+    public <T> Table<T> table(String name, Class<T> clazz) {
+        TableKey key = new TableKey(name, clazz);
+        Table<T> table = (Table<T>) tableMap.get(key);
+        if(table == null) {
             LOG.debug("Create new instance for table [" + name + "]");
-            Table t = new Table(name, clazz);
-            t.setParent(this);
-            tableMap.put(name, t);
+            table = new Table<>(name, clazz);
+            table.setParent(this);
+            tableMap.put(key, table);
         }
 
-        return  tableMap.get(name);
+        return table;
     }
 
     /**
@@ -86,5 +87,45 @@ public class Base {
      */
     public String name() {
         return baseName;
+    }
+
+    private static class TableKey {
+        private final String name;
+        private final Class<?> clazz;
+
+        public TableKey(String name, Class<?> clazz) {
+            this.name = Objects.requireNonNull(name);
+            this.clazz = Objects.requireNonNull(clazz);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Class<?> getClazz() {
+            return clazz;
+        }
+
+        @Override
+        public String toString() {
+            return "TableKey{" +
+                    "name='" + name + '\'' +
+                    ", clazz=" + clazz +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TableKey tableKey = (TableKey) o;
+            return Objects.equals(name, tableKey.name) &&
+                    Objects.equals(clazz, tableKey.clazz);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, clazz);
+        }
     }
 }
