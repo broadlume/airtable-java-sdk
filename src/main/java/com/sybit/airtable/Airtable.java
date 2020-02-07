@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -135,8 +136,8 @@ public class Airtable {
      */
     @SuppressWarnings("WeakerAccess")
     public Airtable configure(Configuration config, ObjectMapper objectMapper) throws AirtableException {
-        assert config != null : "config was null";
-        assert objectMapper != null : "objectMapper was null";
+        Objects.requireNonNull(config);
+        Objects.requireNonNull(objectMapper);
 
         if (config.getApiKey() == null) {
             throw new AirtableException("Missing Airtable API-Key");
@@ -256,9 +257,8 @@ public class Airtable {
         if (base == null) {
             throw new AirtableException("base was null");
         }
-        final Base b = new Base(base, this);
 
-        return b;
+        return new Base(base, this);
     }
 
     public Configuration getConfig() {
@@ -266,7 +266,7 @@ public class Airtable {
     }
 
     public void setConfig(Configuration config) {
-        assert config != null : "config was null";
+        Objects.requireNonNull(config, "config was null");
 
         this.config = config;
         configureProxy(config.getEndpointUrl());

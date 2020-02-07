@@ -6,15 +6,15 @@
  */
 package com.sybit.airtable;
 
-import com.sybit.airtable.exception.AirtableException;
-import com.sybit.airtable.movies.Movie;
-import com.sybit.airtable.mock.WireMockBaseTest;
 import java.util.List;
-import org.apache.http.client.HttpResponseException;
+import com.sybit.airtable.exception.AirtableException;
+import com.sybit.airtable.mock.WireMockBaseTest;
+import com.sybit.airtable.movies.Movie;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import org.junit.Test;
 
 /**
  *
@@ -23,7 +23,7 @@ import org.junit.Test;
 public class TableParameterTest extends WireMockBaseTest {
 
     @Test
-    public void offsetParamTest() throws AirtableException, HttpResponseException {
+    public void offsetParamTest() throws AirtableException {
 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
 
@@ -71,7 +71,7 @@ public class TableParameterTest extends WireMockBaseTest {
     }
 
     @Test
-    public void fieldsParamTest() throws AirtableException, HttpResponseException {
+    public void fieldsParamTest() throws AirtableException {
 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
 
@@ -88,7 +88,7 @@ public class TableParameterTest extends WireMockBaseTest {
     }
 
     @Test
-    public void formulaParamTest() throws AirtableException, HttpResponseException {
+    public void formulaParamTest() throws AirtableException {
 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
 
@@ -135,7 +135,7 @@ public class TableParameterTest extends WireMockBaseTest {
     }
 
     @Test
-    public void maxRecordsParamTest() throws AirtableException, HttpResponseException {
+    public void maxRecordsParamTest() throws AirtableException {
 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
 
@@ -148,7 +148,7 @@ public class TableParameterTest extends WireMockBaseTest {
     }
 
     @Test
-    public void pageSizeParamTest() throws AirtableException, HttpResponseException {
+    public void pageSizeParamTest() throws AirtableException {
 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
 
@@ -196,7 +196,7 @@ public class TableParameterTest extends WireMockBaseTest {
     }
 
     @Test
-    public void sortParamTest() throws AirtableException, HttpResponseException {
+    public void sortParamTest() throws AirtableException {
 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
         Sort sort = new Sort("Name", Sort.Direction.desc);
@@ -208,7 +208,7 @@ public class TableParameterTest extends WireMockBaseTest {
     }
 
     @Test
-    public void viewParamTest() throws AirtableException, HttpResponseException {
+    public void viewParamTest() throws AirtableException {
 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
 

@@ -40,8 +40,7 @@ public class TableSelectJacksonOMTest extends WireMockBaseTest {
                 } catch (UnrecognizedPropertyException e) {
                     try {
                         // dummy instance to follow code flow and execute HttpResponseExceptionHandler.onResponse
-                        T instance = valueType.newInstance();
-                        return instance;
+                        return valueType.newInstance();
                     }
                     catch (IllegalAccessException | InstantiationException e1) {
                         throw new RuntimeException(e);
@@ -95,7 +94,7 @@ public class TableSelectJacksonOMTest extends WireMockBaseTest {
     @Test
     public void testSelectTableSorted() throws AirtableException, HttpResponseException {
 
-        Table table = base.table("Movies", Movie.class);
+        Table<Movie> table = base.table("Movies", Movie.class);
 
         List<Movie> retval = table.select(new Sort("Name", Sort.Direction.asc));
         assertNotNull(retval);

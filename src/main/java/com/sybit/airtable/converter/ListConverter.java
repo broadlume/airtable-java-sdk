@@ -111,13 +111,6 @@ public class ListConverter extends AbstractConverter {
      * @return A List
      */
     private List toStringList(final Class type, final String value, List returnList) {
-
-        //FIXME why this if?
-        if (type.equals(String.class)) {
-            returnList.add(String.valueOf(value));
-            return returnList;
-        }
-
         returnList.add(String.valueOf(value));
         return returnList;
     }

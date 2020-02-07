@@ -30,16 +30,15 @@ public class TableTest {
 
     }
 
-    @Test(expected = java.lang.AssertionError.class)
+    @Test(expected = NullPointerException.class)
     public void testTableAssertions() {
-        Table table = new Table(null, null);
-
+        new Table<>(null, null);
     }
 
     @Test
     public void testTable() {
 
-        Table table = new Table("table", Actor.class, this.base);
+        Table<Actor> table = new Table<>("table", Actor.class, this.base);
         assertNotNull(table);
 
     }
@@ -47,14 +46,14 @@ public class TableTest {
     @Test
     public void setParentTest() {
 
-        Table table = new Table("table", Actor.class);
+        Table<Actor> table = new Table<>("table", Actor.class);
         table.setParent(this.base);
         assertNotNull(table);
     }
 
     @Test
     public void key2properties() {
-        Table table = new Table("table", Actor.class);
+        Table<Actor> table = new Table<>("table", Actor.class);
 
         String actual = table.key2property("FirstName");
         Assert.assertEquals("firstName", actual);
@@ -65,14 +64,14 @@ public class TableTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void key2properties_EmptyArgument() {
-        Table table = new Table("table", Actor.class);
+        Table<Actor> table = new Table<>("table", Actor.class);
         String actual = table.key2property("");
         Assert.fail();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void key2properties_NullArgument() {
-        Table table = new Table("table", Actor.class);
+        Table<Actor> table = new Table<>("table", Actor.class);
         String actual = table.key2property(null);
         Assert.fail();
     }

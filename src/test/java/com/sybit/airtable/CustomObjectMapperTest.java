@@ -56,10 +56,10 @@ public class CustomObjectMapperTest {
 
         listConverter.setListClass(Attachment.class);
 
-        Class type = List.class;
-        List value = new ArrayList();
+        Class<?> type = List.class;
+        List<LinkedTreeMap<String, Object>> value = new ArrayList<>();
 
-        LinkedTreeMap ltm = new LinkedTreeMap();
+        LinkedTreeMap<String, Object> ltm = new LinkedTreeMap<>();
         ltm.put("id","id0001");
         ltm.put("url","http://test.com");
         ltm.put("filename","filename.txt");
@@ -71,8 +71,8 @@ public class CustomObjectMapperTest {
 
         tmb.setName("Thumbnail");
         tmb.setUrl("http:example.com");
-        tmb.setWidth(Float.valueOf(10));
-        tmb.setHeight(Float.valueOf(10));
+        tmb.setWidth(10f);
+        tmb.setHeight(10f);
 
         thumbnails.put("small", tmb);
 
@@ -96,7 +96,7 @@ public class CustomObjectMapperTest {
 
         mapConverter.setMapClass(Thumbnail.class);
 
-        Class type = Map.class;
+        Class<?> type = Map.class;
 
         LinkedTreeMap<String, Object> value = new LinkedTreeMap<>();
         LinkedTreeMap<String, Object> innerMap = new LinkedTreeMap<>();

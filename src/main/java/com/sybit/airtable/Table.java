@@ -6,6 +6,14 @@
  */
 package com.sybit.airtable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import com.google.gson.annotations.SerializedName;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -13,21 +21,16 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.sybit.airtable.exception.AirtableException;
 import com.sybit.airtable.exception.HttpResponseExceptionHandler;
-import com.sybit.airtable.vo.*;
+import com.sybit.airtable.vo.Attachment;
+import com.sybit.airtable.vo.Delete;
+import com.sybit.airtable.vo.PostRecord;
+import com.sybit.airtable.vo.RecordItem;
+import com.sybit.airtable.vo.Records;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Representation Class of Airtable Tables.
@@ -55,11 +58,8 @@ public class Table<T> {
      * @param type class to represent table row
      */
     public Table(String name, Class<T> type) {
-        assert name != null : "name was null";
-        assert type != null : "type was null";
-
-        this.name = name;
-        this.type = type;
+        this.name = Objects.requireNonNull(name);
+        this.type = Objects.requireNonNull(type);
     }
 
     /**
@@ -89,9 +89,8 @@ public class Table<T> {
      *
      * @return List of all items.
      * @throws AirtableException
-     * @throws org.apache.http.client.HttpResponseException
      */
-    public List<T> select() throws AirtableException, HttpResponseException {
+    public List<T> select() throws AirtableException {
         return select(new Query() {
             @Override
             public Integer getMaxRecords() {
@@ -274,9 +273,8 @@ public class Table<T> {
      * @param maxRecords maximum of records per request.
      * @return
      * @throws AirtableException
-     * @throws HttpResponseException
      */
-    public List<T> select(Integer maxRecords) throws AirtableException, HttpResponseException {
+    public List<T> select(Integer maxRecords) throws AirtableException {
         return select(new Query() {
             @Override
             public Integer getMaxRecords() {
@@ -321,9 +319,8 @@ public class Table<T> {
      * @param view
      * @return
      * @throws AirtableException
-     * @throws HttpResponseException
      */
-    public List<T> select(String view) throws AirtableException, HttpResponseException {
+    public List<T> select(String view) throws AirtableException {
         return select(new Query() {
             @Override
             public Integer getMaxRecords() {
@@ -368,9 +365,8 @@ public class Table<T> {
      * @param sortation
      * @return
      * @throws AirtableException
-     * @throws HttpResponseException
      */
-    public List<T> select(Sort sortation) throws AirtableException, HttpResponseException {
+    public List<T> select(Sort sortation) throws AirtableException {
         final List<Sort> sortList = new ArrayList<>();
         sortList.add(sortation);
 
@@ -418,9 +414,8 @@ public class Table<T> {
      * @param fields array of requested fields.
      * @return list of item using only requested fields.
      * @throws AirtableException
-     * @throws HttpResponseException
      */
-    public List<T> select(String[] fields) throws AirtableException, HttpResponseException {
+    public List<T> select(String[] fields) throws AirtableException {
 
         return select(new Query() {
             @Override
@@ -538,8 +533,7 @@ public class Table<T> {
 
         checkProperties(item);
 
-        PostRecord body = new PostRecord<>();
-        body.setFields(item);
+        PostRecord<T> body = new PostRecord<>(item);
 
         HttpResponse<RecordItem> response;
         try {
@@ -589,8 +583,7 @@ public class Table<T> {
 
         String id = getIdOfItem(item);
 
-        PostRecord body = new PostRecord<>();
-        body.setFields(filterFields(item));
+        PostRecord<T> body = new PostRecord<>(filterFields(item));
 
         HttpResponse<RecordItem> response;
         try {
@@ -786,7 +779,7 @@ public class Table<T> {
             LOG.warn("Annotate columns having special characters by using @SerializedName for property: [" + key + "]");
         }
         String property = key.trim();
-        property = property.substring(0, 1).toLowerCase() + property.substring(1, property.length());
+        property = property.substring(0, 1).toLowerCase() + property.substring(1);
 
         return property;
     }
@@ -812,6 +805,7 @@ public class Table<T> {
      * @throws InvocationTargetException
      * @throws NoSuchMethodException
      */
+    @SuppressWarnings("unchecked")
     private void checkProperties(T item) throws AirtableException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
         if (propertyExists(item, FIELD_ID) || propertyExists(item, FIELD_CREATED_TIME)) {
