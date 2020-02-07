@@ -5,21 +5,22 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  */
 
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'com.palantir.jacoco-coverage'
-
 buildscript {
     repositories {
         mavenLocal()
         jcenter()
-   }
+    }
 
-   dependencies {
-       classpath 'com.palantir:jacoco-coverage:0.4.0'
-       classpath "com.smokejumperit.gradle.license:Gradle-License-Report:0.0.2"
-   }
+    dependencies {
+        classpath "com.smokejumperit.gradle.license:Gradle-License-Report:0.0.2"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven'
+    id 'jacoco'
+    id 'maven-publish'
 }
 
 repositories {
@@ -101,6 +102,14 @@ task integrationTest(type: Test) {
   testLogging {
     events "passed", "skipped", "failed"
   }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+        csv.enabled false
+    }
 }
 
 publishing {
