@@ -26,6 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -55,11 +56,8 @@ public class Table<T> {
      * @param type class to represent table row
      */
     public Table(String name, Class<T> type) {
-        assert name != null : "name was null";
-        assert type != null : "type was null";
-
-        this.name = name;
-        this.type = type;
+        this.name = Objects.requireNonNull(name);
+        this.type = Objects.requireNonNull(type);
     }
 
     /**

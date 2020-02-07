@@ -37,11 +37,8 @@ public class Base {
      * @param airtable parent airtable object
      */
     public Base(String name, Airtable airtable) {
-        assert name != null : "baseName was null";
-        assert airtable != null : "airtable was null";
-
-        this.baseName = name;
-        this.parent = airtable;
+        this.baseName = Objects.requireNonNull(name);
+        this.parent = Objects.requireNonNull(airtable);
     }
     
     /**
