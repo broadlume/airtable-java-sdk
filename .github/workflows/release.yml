@@ -1,4 +1,4 @@
-name: master build
+name: release
 on:
   release:
     types: [published]
@@ -22,5 +22,6 @@ jobs:
         run: ./gradlew build
       - name: Publish
         env:
+          REPO_USERNAME: adHawk
           REPO_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew publish
