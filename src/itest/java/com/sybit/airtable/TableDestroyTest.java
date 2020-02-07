@@ -7,13 +7,13 @@
 package com.sybit.airtable;
 
 import com.sybit.airtable.exception.AirtableException;
-import com.sybit.airtable.movies.Actor;
 import com.sybit.airtable.mock.WireMockBaseTest;
-import org.apache.http.client.HttpResponseException;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.sybit.airtable.movies.Actor;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -22,7 +22,7 @@ import org.junit.Test;
 public class TableDestroyTest extends WireMockBaseTest {
 
     @Test
-    public void testDestroyMovie() throws AirtableException, HttpResponseException {
+    public void testDestroyMovie() throws AirtableException {
 
         Table<Actor> actorTable = base.table("Actors", Actor.class);
 
@@ -52,7 +52,7 @@ public class TableDestroyTest extends WireMockBaseTest {
     public void testDestroyMovieException() throws AirtableException {
 
         Table<Actor> actorTable = base.table("Actors", Actor.class);
-        boolean destroyed = actorTable.destroy("not succesfull");
+        actorTable.destroy("not succesfull");
     }
 
 }

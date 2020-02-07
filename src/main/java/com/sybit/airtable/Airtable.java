@@ -257,9 +257,8 @@ public class Airtable {
         if (base == null) {
             throw new AirtableException("base was null");
         }
-        final Base b = new Base(base, this);
 
-        return b;
+        return new Base(base, this);
     }
 
     public Configuration getConfig() {

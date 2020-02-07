@@ -7,16 +7,16 @@
 package com.sybit.airtable;
 
 
+import java.util.Map;
 import com.sybit.airtable.exception.AirtableException;
-import com.sybit.airtable.movies.Movie;
 import com.sybit.airtable.mock.WireMockBaseTest;
+import com.sybit.airtable.movies.Movie;
 import com.sybit.airtable.vo.Attachment;
 import com.sybit.airtable.vo.Thumbnail;
-import java.util.Map;
-import org.apache.http.client.HttpResponseException;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
 
 /**
  *
@@ -27,7 +27,7 @@ public class TableConverterTest extends WireMockBaseTest {
     //TODO Test für nicht gülitiges bzw String 
     
     @Test
-    public void testConvertMovie() throws AirtableException, HttpResponseException {
+    public void testConvertMovie() throws AirtableException {
 
         
         Table<Movie> movieTable = base.table("Movies", Movie.class);
@@ -45,7 +45,7 @@ public class TableConverterTest extends WireMockBaseTest {
     }
     
     @Test
-    public void testConvertAttachement() throws AirtableException, HttpResponseException {
+    public void testConvertAttachement() throws AirtableException {
     
         
         Table<Movie> movieTable = base.table("Movies", Movie.class);
@@ -69,7 +69,7 @@ public class TableConverterTest extends WireMockBaseTest {
     }
     
     @Test
-    public void testConvertThumbnails() throws AirtableException, HttpResponseException {
+    public void testConvertThumbnails() throws AirtableException {
                 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
         Movie movie = movieTable.find("recFj9J78MLtiFFMz");

@@ -71,8 +71,8 @@ public class CustomObjectMapperTest {
 
         tmb.setName("Thumbnail");
         tmb.setUrl("http:example.com");
-        tmb.setWidth(Float.valueOf(10));
-        tmb.setHeight(Float.valueOf(10));
+        tmb.setWidth(10f);
+        tmb.setHeight(10f);
 
         thumbnails.put("small", tmb);
 

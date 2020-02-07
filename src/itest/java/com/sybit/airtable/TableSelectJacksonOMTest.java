@@ -40,8 +40,7 @@ public class TableSelectJacksonOMTest extends WireMockBaseTest {
                 } catch (UnrecognizedPropertyException e) {
                     try {
                         // dummy instance to follow code flow and execute HttpResponseExceptionHandler.onResponse
-                        T instance = valueType.newInstance();
-                        return instance;
+                        return valueType.newInstance();
                     }
                     catch (IllegalAccessException | InstantiationException e1) {
                         throw new RuntimeException(e);

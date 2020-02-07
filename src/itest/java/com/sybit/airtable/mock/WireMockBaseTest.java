@@ -132,7 +132,7 @@ public class WireMockBaseTest {
         public void setServerPort(int aServerPort) {
             serverPort = aServerPort;
         }
-    };
+    }
 
     @Before
     public void setUp() throws AirtableException {
@@ -164,10 +164,8 @@ public class WireMockBaseTest {
             //check if cleanDirectorys
             if (prop.isCleanDirectorys()) {
                 cleanExistingRecords();
-                startRecording();
-            } else {
-                startRecording();
             }
+            startRecording();
         }
     }
 
