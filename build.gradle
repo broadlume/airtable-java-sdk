@@ -42,29 +42,6 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-sourceSets {
-    integrationTest {
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-        // You can add other directories to the classpath like this:
-        //runtimeClasspath += files('src/itest/resources/com/buransky')
-        // Use "java" if you don't use Scala as a programming language
-        java.srcDir file('src/itest/java')
-  }
-  // This is just to trick IntelliJ IDEA to add integration test
-  // resources to classpath when running integration tests from
-  // the IDE. It's is not a good solution but I don't know about
-  // a better one.
-  test {
-    resources.srcDir file('src/itest/resources')
-  }
-}
-
-configurations {
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
-}
-
 dependencies {
     compile group: 'com.mashape.unirest', name: 'unirest-java', version:'1.4.9'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.9'
@@ -93,15 +70,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 // add javadoc/source jar tasks as artifacts
 artifacts {
     archives sourcesJar, javadocJar
-}
-
-task integrationTest(type: Test) {
-  testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
-  classpath = sourceSets.integrationTest.runtimeClasspath
-  // This is not needed, but I like to see which tests have run
-  testLogging {
-    events "passed", "skipped", "failed"
-  }
 }
 
 jacocoTestReport {
@@ -142,5 +110,3 @@ publishing {
         }
     }
 }
-
-integrationTest.mustRunAfter test
