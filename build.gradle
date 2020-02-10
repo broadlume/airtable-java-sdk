@@ -5,17 +5,6 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  */
 
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-
-    dependencies {
-        classpath "com.smokejumperit.gradle.license:Gradle-License-Report:0.0.2"
-    }
-}
-
 plugins {
     id 'java'
     id 'maven'
