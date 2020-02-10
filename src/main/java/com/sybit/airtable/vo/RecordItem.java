@@ -8,9 +8,6 @@ package com.sybit.airtable.vo;
 
 import java.util.Map;
 
-/**
- *
- */
 public class RecordItem {
     private String id;
 

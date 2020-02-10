@@ -43,7 +43,7 @@ public class Base {
     
     /**
      * Get Airtable object as parent.
-     * @return
+     * @return the parent
      */
     public Airtable airtable() {
         return parent;

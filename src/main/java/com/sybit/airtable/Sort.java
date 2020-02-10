@@ -38,18 +38,10 @@ public class Sort {
         this.direction = direction;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getField() {
         return field;
     }
 
-    /**
-     *
-     * @return
-     */
     public Direction getDirection() {
         return direction;
     }

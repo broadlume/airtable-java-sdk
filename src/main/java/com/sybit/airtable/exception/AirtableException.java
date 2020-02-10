@@ -41,7 +41,7 @@ public class AirtableException extends Exception {
     }
 
     /**
-     * Default Exception simmilar to AirtableError of JavaScript Library.
+     * Default Exception similar to AirtableError of JavaScript Library.
      * @param error Error code.
      * @param message Detail message. 
      * @param status HTTP Status Code.

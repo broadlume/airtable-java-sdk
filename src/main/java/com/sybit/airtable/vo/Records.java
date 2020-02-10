@@ -9,9 +9,6 @@ package com.sybit.airtable.vo;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- */
 public class Records {
 
     private List<Map<String, Object>> records;
