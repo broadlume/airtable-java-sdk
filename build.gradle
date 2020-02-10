@@ -25,8 +25,13 @@ version = '2.0.0'
 
 description = """com.tryadhawk airtable"""
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    withSourcesJar()
+    withJavadocJar()
+}
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
@@ -43,22 +48,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version:'2.23.2'
     testCompile group: 'org.slf4j', name: 'slf4j-jdk14', version:'1.7.26'
-}
-
-// custom tasks for creating source jar
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-// custom tasks for creating javadoc jar
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-// add javadoc/source jar tasks as artifacts
-artifacts {
-    archives sourcesJar, javadocJar
 }
 
 jacocoTestReport {
@@ -94,8 +83,6 @@ publishing {
             artifactId rootProject.name
 
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
         }
     }
 }
