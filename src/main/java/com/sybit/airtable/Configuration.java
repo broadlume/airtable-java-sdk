@@ -22,7 +22,7 @@ public class Configuration {
     private Long timeout;
 
     /**
-     * Configure API using given API Key ,default endpoint and no Proxy.
+     * Configure API using given API key, default endpoint and no proxy.
      * @param apiKey the API key
      */
     public Configuration(String apiKey) {
@@ -85,6 +85,4 @@ public class Configuration {
     public void setProxy(String proxy) {
         this.proxy = proxy;
     }
-
-
 }
