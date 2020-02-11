@@ -300,17 +300,13 @@ public class Airtable {
         LOG.info("credentials file: Using file '" + file + "' using key '" + key + "' to get value.");
         String value;
 
-        InputStream in = null;
-        try {
+        try (InputStream in = getClass().getResourceAsStream(file)) {
             final Properties prop = new Properties();
-            in = getClass().getResourceAsStream(file);
             prop.load(in);
             value = prop.getProperty(key);
         } catch (IOException | NullPointerException e) {
             LOG.error(e.getMessage(), e);
             value = null;
-        } finally {
-            org.apache.commons.io.IOUtils.closeQuietly(in);
         }
 
         return value;

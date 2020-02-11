@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class HttpResponseExceptionHandler {
 
-    public static void onResponse(HttpResponse response) throws AirtableException {
+    public static void onResponse(HttpResponse<?> response) throws AirtableException {
 
         final Integer statusCode = response.getStatus();
         String message = convertStreamToString(response.getRawBody());

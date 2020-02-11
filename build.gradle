@@ -5,20 +5,8 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  */
 
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-
-    dependencies {
-        classpath "com.smokejumperit.gradle.license:Gradle-License-Report:0.0.2"
-    }
-}
-
 plugins {
-    id 'java'
-    id 'maven'
+    id 'java-library'
     id 'jacoco'
     id 'maven-publish'
 }
@@ -27,8 +15,6 @@ repositories {
     mavenLocal()
     jcenter()
     mavenCentral()
-    maven { url "https://jitpack.io" }
-    maven { url "http://dl.bintray.com/typesafe/maven-releases" }
 }
 
 group = 'com.tryadhawk'
@@ -36,72 +22,29 @@ version = '2.0.0'
 
 description = """com.tryadhawk airtable"""
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    withSourcesJar()
+    withJavadocJar()
+}
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-sourceSets {
-    integrationTest {
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-        // You can add other directories to the classpath like this:
-        //runtimeClasspath += files('src/itest/resources/com/buransky')
-        // Use "java" if you don't use Scala as a programming language
-        java.srcDir file('src/itest/java')
-  }
-  // This is just to trick IntelliJ IDEA to add integration test
-  // resources to classpath when running integration tests from
-  // the IDE. It's is not a good solution but I don't know about
-  // a better one.
-  test {
-    resources.srcDir file('src/itest/resources')
-  }
-}
-
-configurations {
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
-}
-
 dependencies {
-    compile group: 'com.mashape.unirest', name: 'unirest-java', version:'1.4.9'
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.9'
-    compile group: 'org.json', name: 'json', version:'20160810'
-    compile group: 'com.google.code.gson', name: 'gson', version:'2.8.5'
-    compile group: 'commons-beanutils', name: 'commons-beanutils', version:'1.9.3'
-    compile group: 'commons-io', name: 'commons-io', version:'2.6'
-    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.26'
+    api group: 'com.mashape.unirest', name: 'unirest-java', version:'1.4.9'
+    api group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.9'
+    api group: 'org.json', name: 'json', version:'20160810'
+    api group: 'com.google.code.gson', name: 'gson', version:'2.8.5'
+    api group: 'commons-beanutils', name: 'commons-beanutils', version:'1.9.3'
+    api group: 'commons-io', name: 'commons-io', version:'2.6'
+    api group: 'org.slf4j', name: 'slf4j-api', version:'1.7.26'
 
-    testCompile group: 'junit', name: 'junit', version:'4.12'
-    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version:'2.23.2'
-    testCompile group: 'org.slf4j', name: 'slf4j-jdk14', version:'1.7.26'
-}
-
-// custom tasks for creating source jar
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-// custom tasks for creating javadoc jar
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-// add javadoc/source jar tasks as artifacts
-artifacts {
-    archives sourcesJar, javadocJar
-}
-
-task integrationTest(type: Test) {
-  testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
-  classpath = sourceSets.integrationTest.runtimeClasspath
-  // This is not needed, but I like to see which tests have run
-  testLogging {
-    events "passed", "skipped", "failed"
-  }
+    testImplementation group: 'junit', name: 'junit', version:'4.12'
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version:'2.23.2'
+    testImplementation group: 'org.slf4j', name: 'slf4j-jdk14', version:'1.7.26'
 }
 
 jacocoTestReport {
@@ -128,22 +71,8 @@ publishing {
     }
     publications {
         maven(MavenPublication) {
-            //we have to change scope from runtime to compile. Especially for Gson-lib.
-            pom.withXml {
-                asNode().dependencies.'*'.findAll() {
-                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
-                        dep.name == it.artifactId.text()
-                    }
-                }.each { it.scope*.value = 'compile' }
-            }
-
             artifactId rootProject.name
-
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
         }
     }
 }
-
-integrationTest.mustRunAfter test

@@ -88,7 +88,7 @@ public class Table<T> {
      * Select all rows of table.
      *
      * @return List of all items.
-     * @throws AirtableException
+     * @throws AirtableException if an error occurs
      */
     public List<T> select() throws AirtableException {
         return select(new Query() {
@@ -135,7 +135,7 @@ public class Table<T> {
      *
      * @param query defined query
      * @return list of table items
-     * @throws AirtableException
+     * @throws AirtableException if an error occurs
      */
     @SuppressWarnings("WeakerAccess")
     public List<T> select(final Query query) throws AirtableException {
@@ -223,10 +223,10 @@ public class Table<T> {
     /**
      * Get <code>List</code> by given offset.
      *
-     * @param query 
-     * @param offset
-     * @return
-     * @throws AirtableException
+     * @param query the query to run
+     * @param offset the offset to start results at
+     * @return the list of results
+     * @throws AirtableException if an error occurs
      */
     private List<T> select(Query query, String offset) throws AirtableException {
         return select(new Query() {
@@ -271,8 +271,8 @@ public class Table<T> {
      * Select with parameter maxRecords
      *
      * @param maxRecords maximum of records per request.
-     * @return
-     * @throws AirtableException
+     * @return the list of results
+     * @throws AirtableException if an error occurs
      */
     public List<T> select(Integer maxRecords) throws AirtableException {
         return select(new Query() {
@@ -314,11 +314,11 @@ public class Table<T> {
     }
 
     /**
-     * Select data of table by definied view.
+     * Select data of table by defined view.
      *
-     * @param view
-     * @return
-     * @throws AirtableException
+     * @param view the view
+     * @return the list of results
+     * @throws AirtableException if an error occurs
      */
     public List<T> select(String view) throws AirtableException {
         return select(new Query() {
@@ -360,15 +360,15 @@ public class Table<T> {
     }
 
     /**
-     * select Table data with defined sortation
+     * select Table data with defined sorting
      *
-     * @param sortation
-     * @return
-     * @throws AirtableException
+     * @param sorting the sorting
+     * @return the list of results
+     * @throws AirtableException if an error occurs
      */
-    public List<T> select(Sort sortation) throws AirtableException {
+    public List<T> select(Sort sorting) throws AirtableException {
         final List<Sort> sortList = new ArrayList<>();
-        sortList.add(sortation);
+        sortList.add(sorting);
 
         return select(new Query() {
             @Override
@@ -413,7 +413,7 @@ public class Table<T> {
      *
      * @param fields array of requested fields.
      * @return list of item using only requested fields.
-     * @throws AirtableException
+     * @throws AirtableException if an error occurs
      */
     public List<T> select(String[] fields) throws AirtableException {
 
@@ -458,8 +458,8 @@ public class Table<T> {
     /**
      * Get List of records of response.
      *
-     * @param response
-     * @return
+     * @param response the HTTP response to parse into a list
+     * @return the list of records
      */
     private List<T> getList(HttpResponse<Records> response) {
 
@@ -483,7 +483,7 @@ public class Table<T> {
      *
      * @param id id of record.
      * @return searched record.
-     * @throws AirtableException
+     * @throws AirtableException if an error occurs
      */
     public T find(final String id) throws AirtableException {
 
@@ -634,12 +634,10 @@ public class Table<T> {
      *
      * @param id Id of the row to delete.
      * @return true if success.
-     * @throws AirtableException
+     * @throws AirtableException if an error occurs
      */
 
     public boolean destroy(String id) throws AirtableException {
-
-
         boolean isDeleted;
 
         HttpResponse<Delete> response;
@@ -672,8 +670,7 @@ public class Table<T> {
     }
 
     /**
-     *
-     * @return
+     * @return the parent {@link Base}
      */
     private Base base() {
         return parent;
@@ -692,20 +689,12 @@ public class Table<T> {
     /**
      * Get Bearer Token for Authentication Header.
      *
-     * @return
+     * @return the bearer token
      */
     private String getBearerToken() {
         return "Bearer " + base().airtable().apiKey();
     }
 
-    /**
-     *
-     * @param record
-     * @param retval
-     * @return
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
     private T transform(Map<String, Object> record, T retval) throws InvocationTargetException, IllegalAccessException {
         for (String key : record.keySet()) {
             if ("fields".equals(key)) {
@@ -719,14 +708,6 @@ public class Table<T> {
         return retval;
     }
 
-    /**
-     *
-     * @param record
-     * @param retval
-     * @return
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     */
     private T transform(RecordItem record, T retval) throws InvocationTargetException, IllegalAccessException {
         setProperty(retval, FIELD_ID, record.getId());
         setProperty(retval, FIELD_CREATED_TIME, record.getCreatedTime());
@@ -736,14 +717,6 @@ public class Table<T> {
         return retval;
     }
 
-    /**
-     *
-     * @param retval
-     * @param key
-     * @param value
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     */
     private void setProperty(T retval, String key, Object value) throws IllegalAccessException, InvocationTargetException {
         String property = key2property(key);
 
@@ -766,8 +739,8 @@ public class Table<T> {
     /**
      * Convert AirTable ColumnName to Java PropertyName.
      *
-     * @param key
-     * @return
+     * @param key the key
+     * @return the jova property name
      */
     String key2property(final String key) {
         

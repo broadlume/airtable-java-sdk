@@ -53,7 +53,7 @@ public interface Query {
      * Offset to get more than 100 records.
      * 
      * The offset is provided by previous result.
-     * @return 
+     * @return the offset
      */
     String getOffset();
 }

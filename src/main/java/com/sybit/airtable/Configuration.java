@@ -22,9 +22,8 @@ public class Configuration {
     private Long timeout;
 
     /**
-     * Configure API using given API Key ,default endpoint and no Proxy.
-     *
-     * @param apiKey
+     * Configure API using given API key, default endpoint and no proxy.
+     * @param apiKey the API key
      */
     public Configuration(String apiKey) {
         this(apiKey, ENDPOINT_URL,null);
@@ -32,9 +31,8 @@ public class Configuration {
     }
     /**
      * Configure API using given API Key and default endpointURL.
-     *
-     * @param apiKey
-     * @param endpointUrl
+     * @param apiKey the API key
+     * @param endpointUrl the default endpoint URL
      */
     public Configuration(String apiKey, String endpointUrl, String proxy) {
         this.apiKey = apiKey;
@@ -60,7 +58,7 @@ public class Configuration {
 
     /**
      * Get connection timeout.
-     * @return
+     * @return the connection timeout
      */
     public Long getTimeout() {
         return timeout;
@@ -68,7 +66,7 @@ public class Configuration {
 
     /**
      * Set connection timeout.
-     * @param timeout
+     * @param timeout the connection timeout
      */
     public void setTimeout(Long timeout) {
         this.timeout = timeout;
@@ -87,6 +85,4 @@ public class Configuration {
     public void setProxy(String proxy) {
         this.proxy = proxy;
     }
-
-
 }
