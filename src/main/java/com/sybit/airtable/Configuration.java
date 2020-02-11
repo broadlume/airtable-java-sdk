@@ -6,83 +6,39 @@
  */
 package com.sybit.airtable;
 
+import javax.annotation.Nullable;
+import com.google.auto.value.AutoValue;
+
 /**
  * Configuration settings for Airtable.
  * Used by class <code>Airtable</code> to configure basic settings.
  *
  * @since 0.1
  */
-public class Configuration {
+@AutoValue
+public abstract class Configuration {
 
     public static final String ENDPOINT_URL = "https://api.airtable.com/v0";
 
-    private String endpointUrl;
-    private String apiKey;
-    private String proxy;
-    private Long timeout;
-
-    /**
-     * Configure API using given API key, default endpoint and no proxy.
-     * @param apiKey the API key
-     */
-    public Configuration(String apiKey) {
-        this(apiKey, ENDPOINT_URL,null);
-
-    }
-    /**
-     * Configure API using given API Key and default endpointURL.
-     * @param apiKey the API key
-     * @param endpointUrl the default endpoint URL
-     */
-    public Configuration(String apiKey, String endpointUrl, String proxy) {
-        this.apiKey = apiKey;
-        this.endpointUrl = endpointUrl;
-        this.proxy = proxy;
+    public static Builder builder() {
+        return new AutoValue_Configuration.Builder()
+                .setEndpointUrl(ENDPOINT_URL);
     }
 
-    public String getEndpointUrl() {
-        return endpointUrl;
-    }
+    public abstract String getEndpointUrl();
+    public abstract String getApiKey();
+    @Nullable
+    public abstract String getProxy();
+    @Nullable
+    public abstract Long getTimeout();
 
-    public void setEndpointUrl(String endpointUrl) {
-        this.endpointUrl = endpointUrl;
-    }
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder setEndpointUrl(String endpointUrl);
+        public abstract Builder setApiKey(String apiKey);
+        public abstract Builder setProxy(String proxy);
+        public abstract Builder setTimeout(Long timeout);
 
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    /**
-     * Get connection timeout.
-     * @return the connection timeout
-     */
-    public Long getTimeout() {
-        return timeout;
-    }
-
-    /**
-     * Set connection timeout.
-     * @param timeout the connection timeout
-     */
-    public void setTimeout(Long timeout) {
-        this.timeout = timeout;
-    }
-
-    /**
-     * @return the proxy
-     */
-    public String getProxy() {
-        return proxy;
-    }
-
-    /**
-     * @param proxy the proxy to set
-     */
-    public void setProxy(String proxy) {
-        this.proxy = proxy;
+        public abstract Configuration build();
     }
 }

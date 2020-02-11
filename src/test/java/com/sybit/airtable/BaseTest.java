@@ -6,7 +6,6 @@
  */
 package com.sybit.airtable;
 
-import com.sybit.airtable.exception.AirtableException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,11 +21,8 @@ public class BaseTest {
     private Airtable airtable;
     
     @Before
-    public void before() throws AirtableException{
-    
-        this.airtable = new Airtable().configure(new Configuration("123","http://localhost",null));
-        
-        
+    public void before() {
+        this.airtable = new Airtable(Configuration.builder().setApiKey("123").setEndpointUrl("http://localhost").build());
     }
     
     @Test

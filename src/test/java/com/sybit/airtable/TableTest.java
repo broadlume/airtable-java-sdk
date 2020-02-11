@@ -6,7 +6,6 @@
  */
 package com.sybit.airtable;
 
-import com.sybit.airtable.exception.AirtableException;
 import com.sybit.airtable.movies.Actor;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,9 +22,8 @@ public class TableTest {
     private Base base;
 
     @Before
-    public void before() throws AirtableException {
-
-        Airtable airtable = new Airtable().configure(new Configuration("123", "https://url", null));
+    public void before() {
+        Airtable airtable = new Airtable(Configuration.builder().setApiKey("123").setEndpointUrl("https://url").build());
         this.base = new Base("base", airtable);
 
     }
@@ -65,14 +63,14 @@ public class TableTest {
     @Test(expected = IllegalArgumentException.class)
     public void key2properties_EmptyArgument() {
         Table<Actor> table = new Table<>("table", Actor.class);
-        String actual = table.key2property("");
+        table.key2property("");
         Assert.fail();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void key2properties_NullArgument() {
         Table<Actor> table = new Table<>("table", Actor.class);
-        String actual = table.key2property(null);
+        table.key2property(null);
         Assert.fail();
     }
 

@@ -683,7 +683,7 @@ public class Table<T> {
      */
     private String getTableEndpointUrl() {
 
-        return base().airtable().endpointUrl() + "/" + base().name() + "/" + this.name;
+        return base().airtable().getConfig().getEndpointUrl() + "/" + base().name() + "/" + this.name;
     }
 
     /**
@@ -692,7 +692,7 @@ public class Table<T> {
      * @return the bearer token
      */
     private String getBearerToken() {
-        return "Bearer " + base().airtable().apiKey();
+        return "Bearer " + base().airtable().getConfig().getApiKey();
     }
 
     private T transform(Map<String, Object> record, T retval) throws InvocationTargetException, IllegalAccessException {
