@@ -12,7 +12,6 @@ import java.util.Map;
 public class Records {
 
     private List<Map<String, Object>> records;
-    
     private String offset;
 
     public List<Map<String, Object>> getRecords() {

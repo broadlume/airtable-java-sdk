@@ -105,11 +105,4 @@ public class Attachment {
     public void setThumbnails(Map<String,Thumbnail> thumbnails) {
         this.thumbnails = thumbnails;
     }
-
-
-
-    
-
-    
-    
 }

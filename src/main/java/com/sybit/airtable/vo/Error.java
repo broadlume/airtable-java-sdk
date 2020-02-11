@@ -7,6 +7,7 @@
 package com.sybit.airtable.vo;
 
 public class Error {
+
     private String type;
     private String message;
 

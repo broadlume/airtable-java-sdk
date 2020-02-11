@@ -8,30 +8,28 @@ package com.sybit.airtable.vo;
 
 
 /**
- *
  * @author fzr
  */
 public class Thumbnail {
-    
-        private String name;
-    
-        private String url;
-        private Float width;
-        private Float height;
 
-        /**
-         * @return the url
-         */
-        public String getUrl() {
-            return url;
-        }
+    private String name;
+    private String url;
+    private Float width;
+    private Float height;
 
-        /**
-         * @param url the url to set
-         */
-        public void setUrl(String url) {
-            this.url = url;
-        }
+    /**
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * @param url the url to set
+     */
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     /**
      * @return the width
@@ -74,9 +72,6 @@ public class Thumbnail {
     public void setName(String name) {
         this.name = name;
     }
-        
-        
 
 
-        
 }
