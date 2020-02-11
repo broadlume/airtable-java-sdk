@@ -9,8 +9,8 @@ package com.sybit.airtable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mashape.unirest.http.ObjectMapper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default mapper based on GSON.
@@ -19,24 +19,23 @@ import java.util.logging.Logger;
  * @author fzr
  */
 class GsonObjectMapper implements ObjectMapper {
-    private static final Logger LOG = Logger.getLogger( GsonObjectMapper.class.getName() );
+
+    private static final Logger LOG = LoggerFactory.getLogger( GsonObjectMapper.class.getName() );
     private final Gson gson;
                 
     public GsonObjectMapper() {
         gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-     
     }
 
     @Override
     public <T> T readValue(String value, Class<T> valueType) {
-        LOG.log(Level.FINE, "readValue: \n{0}", value);
+        LOG.debug("readValue: {}", value);
         return gson.fromJson(value, valueType);
     }
 
     @Override
     public String writeValue(Object value) {
-        LOG.log(Level.FINE, "writeValue: \n{0}", value);
+        LOG.debug("writeValue: {}", value);
         return gson.toJson(value);
     }
-
 }
