@@ -20,8 +20,6 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.beanutils.converters.DateTimeConverter;
 import org.apache.http.HttpHost;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Representation Class of Airtable. It is the entry class to access Airtable
@@ -29,8 +27,6 @@ import org.slf4j.LoggerFactory;
  * @since 0.1
  */
 public class Airtable {
-
-    private static final Logger LOG = LoggerFactory.getLogger(Airtable.class);
 
     private final Configuration config;
 
@@ -41,14 +37,11 @@ public class Airtable {
     public Airtable(Configuration config, ObjectMapper objectMapper) {
         this.config = Objects.requireNonNull(config, "configuration cannot be null");
 
-        if (config.getTimeout() != null) {
-            LOG.info("Set connection timeout to: " + config.getTimeout() + "ms.");
+        if (config.getTimeout() != null)
             Unirest.setTimeouts(config.getTimeout(), config.getTimeout());
-        }
+        if (config.getProxy() != null)
+            Unirest.setProxy(HttpHost.create(config.getProxy()));
 
-        configureProxy();
-
-        // Only one time
         Unirest.setObjectMapper(objectMapper);
 
         // Add specific Converter for Date
@@ -56,29 +49,17 @@ public class Airtable {
         dtConverter.setPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         ConvertUtils.register(dtConverter, Date.class);
 
-        ListConverter lConverter = new ListConverter();
-        lConverter.setListClass(Attachment.class);
-        ConvertUtils.register(lConverter, List.class);
+        ListConverter listConverter = new ListConverter();
+        listConverter.setListClass(Attachment.class);
+        ConvertUtils.register(listConverter, List.class);
 
-        MapConverter thConverter = new MapConverter();
-        thConverter.setMapClass(Thumbnail.class);
-        ConvertUtils.register(thConverter, Map.class);
+        MapConverter mapConverter = new MapConverter();
+        mapConverter.setMapClass(Thumbnail.class);
+        ConvertUtils.register(mapConverter, Map.class);
     }
 
-    /**
-     * Set Proxy environment from Configuration.
-     *
-     * Proxy will be ignored for endpointUrls containing <code>localhost</code>
-     * or <code>127.0.0.1</code>.
-     */
-    private void configureProxy() {
-        String endpointUrl = config.getEndpointUrl();
-        if ((endpointUrl.contains("127.0.0.1") || endpointUrl.contains("localhost"))) {
-            LOG.info("Use Proxy: ignored for 'localhost' and '127.0.0.1'");
-            Unirest.setProxy(null);
-        } else if (config.getProxy() != null) {
-            Unirest.setProxy(HttpHost.create(config.getProxy()));
-        }
+    public Configuration getConfig() {
+        return config;
     }
 
     /**
@@ -88,9 +69,5 @@ public class Airtable {
      */
     public Base base(String base) {
         return new Base(base, this);
-    }
-
-    public Configuration getConfig() {
-        return config;
     }
 }
