@@ -6,53 +6,44 @@
  */
 package com.sybit.airtable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import com.google.gson.internal.LinkedTreeMap;
 import com.sybit.airtable.converter.ListConverter;
 import com.sybit.airtable.converter.MapConverter;
 import com.sybit.airtable.vo.Attachment;
 import com.sybit.airtable.vo.Thumbnail;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
- *
  * @author fzr
  */
 public class CustomObjectMapperTest {
 
-    private ListConverter listConverter;
-    private MapConverter mapConverter;
-
-    @Before
-    public void before(){
-
-        this.listConverter = new ListConverter();
-        this.mapConverter = new MapConverter();
-
-    }
+    private ListConverter listConverter = new ListConverter();
+    private MapConverter mapConverter = new MapConverter();
 
     @Test
-    public void listClassTest(){
+    public void listClassTest() {
 
         listConverter.setListClass(Attachment.class);
-        assertEquals(listConverter.getListClass(),Attachment.class);
+        assertEquals(Attachment.class, listConverter.getListClass());
     }
 
     @Test
-    public void mapClassTest(){
+    public void mapClassTest() {
 
         mapConverter.setMapClass(Thumbnail.class);
-        assertEquals(mapConverter.getMapClass(),Thumbnail.class);
+        assertEquals(Thumbnail.class, mapConverter.getMapClass());
     }
 
     @Test
-    public void convertListTest(){
+    public void convertListTest() {
 
         listConverter.setListClass(Attachment.class);
 
@@ -60,13 +51,13 @@ public class CustomObjectMapperTest {
         List<LinkedTreeMap<String, Object>> value = new ArrayList<>();
 
         LinkedTreeMap<String, Object> ltm = new LinkedTreeMap<>();
-        ltm.put("id","id0001");
-        ltm.put("url","http://test.com");
-        ltm.put("filename","filename.txt");
-        ltm.put("size","10");
-        ltm.put("type","image/jpeg");
+        ltm.put("id", "id0001");
+        ltm.put("url", "http://test.com");
+        ltm.put("filename", "filename.txt");
+        ltm.put("size", "10");
+        ltm.put("type", "image/jpeg");
 
-        Map<String,Thumbnail> thumbnails = new HashMap<>();
+        Map<String, Thumbnail> thumbnails = new HashMap<>();
         Thumbnail tmb = new Thumbnail();
 
         tmb.setName("Thumbnail");
@@ -76,7 +67,7 @@ public class CustomObjectMapperTest {
 
         thumbnails.put("small", tmb);
 
-        ltm.put("thumbnails",thumbnails);
+        ltm.put("thumbnails", thumbnails);
 
         value.add(0, ltm);
 
@@ -92,7 +83,7 @@ public class CustomObjectMapperTest {
     }
 
     @Test
-    public void convertMapTest(){
+    public void convertMapTest() {
 
         mapConverter.setMapClass(Thumbnail.class);
 
@@ -101,18 +92,14 @@ public class CustomObjectMapperTest {
         LinkedTreeMap<String, Object> value = new LinkedTreeMap<>();
         LinkedTreeMap<String, Object> innerMap = new LinkedTreeMap<>();
 
-        innerMap.put("url","http://example.com");
-        value.put("small",innerMap);
+        innerMap.put("url", "http://example.com");
+        value.put("small", innerMap);
 
 
-        Map<String,Thumbnail> thumb = (Map<String,Thumbnail>) mapConverter.convert(type,value);
+        Map<String, Thumbnail> thumb = (Map<String, Thumbnail>) mapConverter.convert(type, value);
         System.out.println(thumb);
         assertNotNull(thumb);
         assertNotNull(thumb.get("small"));
         assertNotNull(thumb.get("small").getUrl());
-
-
-
     }
-
 }
