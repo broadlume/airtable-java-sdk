@@ -16,7 +16,7 @@ import static org.junit.Assert.assertSame;
 
 public class BaseTest {
 
-    private Airtable airtable = new Airtable(Configuration.builder().setApiKey("123").setEndpointUrl("http://localhost")
+    private Airtable airtable = new Airtable(Configuration.builder().apiKey("123").endpointUrl("http://localhost")
             .build());
     private Base base = new Base("base", airtable);
 

@@ -6,8 +6,10 @@
  */
 package com.sybit.airtable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.google.auto.value.AutoValue;
+import lombok.Builder;
+import lombok.Value;
 
 /**
  * Configuration settings for Airtable.
@@ -15,30 +17,19 @@ import com.google.auto.value.AutoValue;
  *
  * @since 0.1
  */
-@AutoValue
-public abstract class Configuration {
+@Value
+@Builder(toBuilder = true)
+public class Configuration {
 
     public static final String ENDPOINT_URL = "https://api.airtable.com/v0";
 
-    public static Builder builder() {
-        return new AutoValue_Configuration.Builder()
-                .setEndpointUrl(ENDPOINT_URL);
-    }
-
-    public abstract String getEndpointUrl();
-    public abstract String getApiKey();
+    @Builder.Default
+    @Nonnull
+    private final String endpointUrl = ENDPOINT_URL;
+    @Nonnull
+    private final String apiKey;
     @Nullable
-    public abstract String getProxy();
+    private final String proxy;
     @Nullable
-    public abstract Long getTimeout();
-
-    @AutoValue.Builder
-    public abstract static class Builder {
-        public abstract Builder setEndpointUrl(String endpointUrl);
-        public abstract Builder setApiKey(String apiKey);
-        public abstract Builder setProxy(String proxy);
-        public abstract Builder setTimeout(Long timeout);
-
-        public abstract Configuration build();
-    }
+    private final Long timeout;
 }

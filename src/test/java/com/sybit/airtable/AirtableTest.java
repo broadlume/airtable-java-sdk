@@ -10,8 +10,8 @@ public class AirtableTest {
     @Test
     public void baseTest() {
         Configuration configuration = Configuration.builder()
-                .setApiKey("12345")
-                .setEndpointUrl("http://test.com")
+                .apiKey("12345")
+                .endpointUrl("http://test.com")
                 .build();
         Airtable airtable = new Airtable(configuration);
         assertNotNull(airtable.base("test-base"));
@@ -20,8 +20,8 @@ public class AirtableTest {
     @Test
     public void getConfigurationTest() {
         Configuration configuration = Configuration.builder()
-                .setApiKey("12345")
-                .setEndpointUrl("http://test.com")
+                .apiKey("12345")
+                .endpointUrl("http://test.com")
                 .build();
         Airtable airtable = new Airtable(configuration);
         assertEquals(configuration, airtable.getConfig());

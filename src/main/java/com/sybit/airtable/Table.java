@@ -9,6 +9,7 @@ package com.sybit.airtable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -43,24 +44,13 @@ public class Table<T> {
     private static final Logger LOG = LoggerFactory.getLogger(Table.class);
     
     private static final String MIME_TYPE_JSON = "application/json";
-    
+
     private static final String FIELD_ID = "id";
     private static final String FIELD_CREATED_TIME = "createdTime";
 
     private final String name;
     private final Class<T> type;
-
-    private Base parent;
-
-    /**
-     *
-     * @param name name of table.
-     * @param type class to represent table row
-     */
-    public Table(String name, Class<T> type) {
-        this.name = Objects.requireNonNull(name);
-        this.type = Objects.requireNonNull(type);
-    }
+    private final Base parent;
 
     /**
      * Constructor of Table.
@@ -69,19 +59,10 @@ public class Table<T> {
      * @param type Class to map the rows.
      * @param base Base containing table.
      */
-    @SuppressWarnings("WeakerAccess")
     public Table(String name, Class<T> type, Base base) {
-        this(name, type);
-        setParent(base);
-    }
-
-    /**
-     * Set the parent base.
-     * 
-     * @param parent parent base of table.
-     */
-    public void setParent(Base parent) {
-        this.parent = parent;
+        this.name = Objects.requireNonNull(name);
+        this.type = Objects.requireNonNull(type);
+        this.parent = base;
     }
 
     /**
@@ -91,43 +72,63 @@ public class Table<T> {
      * @throws AirtableException if an error occurs
      */
     public List<T> select() throws AirtableException {
-        return select(new Query() {
-            @Override
-            public Integer getMaxRecords() {
-                return null;
-            }
+        return select(Query.builder().build());
+    }
 
-            @Override
-            public String getView() {
-                return null;
-            }
+    /**
+     * Get <code>List</code> by given offset.
+     *
+     * @param query the query to run
+     * @param offset the offset to start results at
+     * @return the list of results
+     * @throws AirtableException if an error occurs
+     */
+    private List<T> select(Query query, String offset) throws AirtableException {
+        return select(query.toBuilder().offset(offset).build());
+    }
 
-            @Override
-            public List<Sort> getSort() {
-                return null;
-            }
+    /**
+     * Select with parameter maxRecords
+     *
+     * @param maxRecords maximum of records per request.
+     * @return the list of results
+     * @throws AirtableException if an error occurs
+     */
+    public List<T> select(Integer maxRecords) throws AirtableException {
+        return select(Query.builder().maxRecords(maxRecords).build());
+    }
 
-            @Override
-            public String filterByFormula() {
-                return null;
-            }
+    /**
+     * Select data of table by defined view.
+     *
+     * @param view the view
+     * @return the list of results
+     * @throws AirtableException if an error occurs
+     */
+    public List<T> select(String view) throws AirtableException {
+        return select(Query.builder().view(view).build());
+    }
 
-            @Override
-            public String[] getFields() {
-                return null;
-            }
+    /**
+     * select Table data with defined sorting
+     *
+     * @param sorting the sorting
+     * @return the list of results
+     * @throws AirtableException if an error occurs
+     */
+    public List<T> select(Sort sorting) throws AirtableException {
+        return select(Query.builder().sort(Collections.singletonList(sorting)).build());
+    }
 
-            @Override
-            public Integer getPageSize() {
-                return null;
-            }
-
-            @Override
-            public String getOffset() {
-                return null;
-            }
-        });
-
+    /**
+     * Select only Table data with defined fields.
+     *
+     * @param fields array of requested fields.
+     * @return list of item using only requested fields.
+     * @throws AirtableException if an error occurs
+     */
+    public List<T> select(String[] fields) throws AirtableException {
+        return select(Query.builder().fields(fields).build());
     }
 
     /**
@@ -146,22 +147,16 @@ public class Table<T> {
                     .header("Authorization", getBearerToken())
                     .header("Content-type" , MIME_TYPE_JSON);
 
-            if (query.getFields() != null && query.getFields().length > 0) {
-                String[] fields = query.getFields();
-                for (String field : fields) {
+            if (query.getFields() != null) {
+                for (String field : query.getFields())
                     request.queryString("fields[]", field);
-
-                }
             }
-            if (query.getMaxRecords() != null) {
+            if (query.getMaxRecords() != null)
                 request.queryString("maxRecords", query.getMaxRecords());
-            }
-            if (query.getView() != null) {
+            if (query.getView() != null)
                 request.queryString("view", query.getView());
-            }
-            if (query.filterByFormula() != null) {
-                request.queryString("filterByFormula", query.filterByFormula());
-            }
+            if (query.getFilterByFormula() != null)
+                request.queryString("filterByFormula", query.getFilterByFormula());
             if (query.getPageSize() != null) {
                 if (query.getPageSize() > 100) {
                     LOG.warn("pageSize is limited to max 100 but was " + query.getPageSize());
@@ -177,11 +172,10 @@ public class Table<T> {
                     request.queryString("sort[" + i + "][direction]", sort.getDirection());
                 }
             }
-            if (query.getOffset()!= null) {
+            if (query.getOffset()!= null)
                 request.queryString("offset", query.getOffset());
-            }
 
-            LOG.debug("URL=" + request.getUrl());
+            LOG.debug("URL={}", request.getUrl());
 
             response = request.asObject(Records.class);
         } catch (UnirestException e) {
@@ -221,248 +215,12 @@ public class Table<T> {
     }
 
     /**
-     * Get <code>List</code> by given offset.
-     *
-     * @param query the query to run
-     * @param offset the offset to start results at
-     * @return the list of results
-     * @throws AirtableException if an error occurs
-     */
-    private List<T> select(Query query, String offset) throws AirtableException {
-        return select(new Query() {
-            @Override
-            public Integer getMaxRecords() {
-                return query.getMaxRecords();
-            }
-
-            @Override
-            public String getView() {
-                return query.getView();
-            }
-
-            @Override
-            public List<Sort> getSort() {
-                return query.getSort();
-            }
-
-            @Override
-            public String filterByFormula() {
-                return query.filterByFormula();
-            }
-
-            @Override
-            public String[] getFields() {
-                return query.getFields();
-            }
-
-            @Override
-            public Integer getPageSize() {
-                return query.getPageSize();
-            }
-
-            @Override
-            public String getOffset() {
-                return offset;
-            }
-        });
-    }
-
-    /**
-     * Select with parameter maxRecords
-     *
-     * @param maxRecords maximum of records per request.
-     * @return the list of results
-     * @throws AirtableException if an error occurs
-     */
-    public List<T> select(Integer maxRecords) throws AirtableException {
-        return select(new Query() {
-            @Override
-            public Integer getMaxRecords() {
-                return maxRecords;
-            }
-
-            @Override
-            public String getView() {
-                return null;
-            }
-
-            @Override
-            public List<Sort> getSort() {
-                return null;
-            }
-
-            @Override
-            public String filterByFormula() {
-                return null;
-            }
-
-            @Override
-            public String[] getFields() {
-                return null;
-            }
-
-            @Override
-            public Integer getPageSize() {
-                return null;
-            }
-
-            @Override
-            public String getOffset() {
-                return null;
-            }
-        });
-    }
-
-    /**
-     * Select data of table by defined view.
-     *
-     * @param view the view
-     * @return the list of results
-     * @throws AirtableException if an error occurs
-     */
-    public List<T> select(String view) throws AirtableException {
-        return select(new Query() {
-            @Override
-            public Integer getMaxRecords() {
-                return null;
-            }
-
-            @Override
-            public String getView() {
-                return view;
-            }
-
-            @Override
-            public List<Sort> getSort() {
-                return null;
-            }
-
-            @Override
-            public String filterByFormula() {
-                return null;
-            }
-
-            @Override
-            public String[] getFields() {
-                return null;
-            }
-
-            @Override
-            public Integer getPageSize() {
-                return null;
-            }
-
-            @Override
-            public String getOffset() {
-                return null;
-            }
-        });
-    }
-
-    /**
-     * select Table data with defined sorting
-     *
-     * @param sorting the sorting
-     * @return the list of results
-     * @throws AirtableException if an error occurs
-     */
-    public List<T> select(Sort sorting) throws AirtableException {
-        final List<Sort> sortList = new ArrayList<>();
-        sortList.add(sorting);
-
-        return select(new Query() {
-            @Override
-            public Integer getMaxRecords() {
-                return null;
-            }
-
-            @Override
-            public String getView() {
-                return null;
-            }
-
-            @Override
-            public List<Sort> getSort() {
-                return sortList;
-            }
-
-            @Override
-            public String filterByFormula() {
-                return null;
-            }
-
-            @Override
-            public String[] getFields() {
-                return null;
-            }
-
-            @Override
-            public Integer getPageSize() {
-                return null;
-            }
-
-            @Override
-            public String getOffset() {
-                return null;
-            }
-        });
-    }
-
-    /**
-     * Select only Table data with defined fields.
-     *
-     * @param fields array of requested fields.
-     * @return list of item using only requested fields.
-     * @throws AirtableException if an error occurs
-     */
-    public List<T> select(String[] fields) throws AirtableException {
-
-        return select(new Query() {
-            @Override
-            public Integer getMaxRecords() {
-                return null;
-            }
-
-            @Override
-            public String getView() {
-                return null;
-            }
-
-            @Override
-            public List<Sort> getSort() {
-                return null;
-            }
-
-            @Override
-            public String filterByFormula() {
-                return null;
-            }
-
-            @Override
-            public String[] getFields() {
-                return fields;
-            }
-
-            @Override
-            public Integer getPageSize() {
-                return null;
-            }
-
-            @Override
-            public String getOffset() {
-                return null;
-            }
-        });
-    }
-
-    /**
      * Get List of records of response.
      *
      * @param response the HTTP response to parse into a list
      * @return the list of records
      */
     private List<T> getList(HttpResponse<Records> response) {
-
         final Records records = response.getBody();
         final List<T> list = new ArrayList<>();
 
@@ -486,10 +244,9 @@ public class Table<T> {
      * @throws AirtableException if an error occurs
      */
     public T find(final String id) throws AirtableException {
-
         RecordItem body;
-
         HttpResponse<RecordItem> response;
+
         try {
             response = Unirest.get(getTableEndpointUrl() + "/" + id)
                     .header("accept", MIME_TYPE_JSON)
@@ -528,14 +285,11 @@ public class Table<T> {
      * @throws NoSuchMethodException
      */
     public T create(final T item) throws AirtableException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-
         RecordItem responseBody = null;
-
         checkProperties(item);
-
         PostRecord<T> body = new PostRecord<>(item);
-
         HttpResponse<RecordItem> response;
+
         try {
             response = Unirest.post(getTableEndpointUrl())
                     .header("accept", MIME_TYPE_JSON)
@@ -578,14 +332,11 @@ public class Table<T> {
      * @throws NoSuchMethodException 
      */
     public T update(final T item) throws AirtableException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-
         RecordItem responseBody = null;
-
         String id = getIdOfItem(item);
-
         PostRecord<T> body = new PostRecord<>(filterFields(item));
-
         HttpResponse<RecordItem> response;
+
         try {
             response = Unirest.patch(getTableEndpointUrl() + "/" + id)
                     .header("accept", MIME_TYPE_JSON)
@@ -620,24 +371,13 @@ public class Table<T> {
     }
 
     /**
-     * 
-     * @param item
-     * @return 
-     */
-    public T replace(T item) {
-
-        throw new UnsupportedOperationException("not yet implemented");
-    }
-
-    /**
      * Delete Record by given id
      *
      * @param id Id of the row to delete.
      * @return true if success.
      * @throws AirtableException if an error occurs
      */
-
-    public boolean destroy(String id) throws AirtableException {
+    public boolean delete(String id) throws AirtableException {
         boolean isDeleted;
 
         HttpResponse<Delete> response;
@@ -656,7 +396,7 @@ public class Table<T> {
             isDeleted = body.isDeleted();
         } else if (429 == code) {
             randomWait();
-            return destroy(id);
+            return delete(id);
         } else {
             isDeleted = false;
             HttpResponseExceptionHandler.onResponse(response);
@@ -682,7 +422,6 @@ public class Table<T> {
      * @return URL of tables endpoint.
      */
     private String getTableEndpointUrl() {
-
         return base().getAirtable().getConfig().getEndpointUrl() + "/" + base().getName() + "/" + this.name;
     }
 
@@ -743,7 +482,6 @@ public class Table<T> {
      * @return the jova property name
      */
     String key2property(final String key) {
-        
         if(key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Key was null or empty.");
         }
@@ -791,7 +529,7 @@ public class Table<T> {
                     }
                 } else if ("photos".equals(attrName)) {
                     List<Attachment> obj = (List<Attachment>) BeanUtilsBean.getInstance().getPropertyUtils().getProperty(item, "photos");
-                    checkPropertiesOfAttachement(obj);
+                    checkPropertiesOfAttachment(obj);
                 }
             }
         }
@@ -799,27 +537,27 @@ public class Table<T> {
     }
 
     /**
-     * Check properties of Attachement objects.
+     * Check properties of Attachment objects.
      * 
-     * @param attachements
+     * @param attachments
      * @throws AirtableException
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      * @throws NoSuchMethodException 
      */
-    private void checkPropertiesOfAttachement(List<Attachment> attachements) throws AirtableException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-
-        if (attachements != null) {
-            for (int i = 0; i < attachements.size(); i++) {
-                if (propertyExists(attachements.get(i), FIELD_ID) || propertyExists(attachements.get(i), "size") 
-                        || propertyExists(attachements.get(i), "type") || propertyExists(attachements.get(i), "filename")) {
+    private void checkPropertiesOfAttachment(List<Attachment> attachments) throws AirtableException,
+            IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        if (attachments != null) {
+            for (int i = 0; i < attachments.size(); i++) {
+                if (propertyExists(attachments.get(i), FIELD_ID) || propertyExists(attachments.get(i), "size")
+                        || propertyExists(attachments.get(i), "type") || propertyExists(attachments.get(i), "filename")) {
                     
-                    final Field[] attributesPhotos = attachements.getClass().getDeclaredFields();
+                    final Field[] attributesPhotos = attachments.getClass().getDeclaredFields();
                     for (Field attributePhoto : attributesPhotos) {
                         final String namePhotoAttribute = attributePhoto.getName();
                         if (FIELD_ID.equals(namePhotoAttribute) || "size".equals(namePhotoAttribute) 
                                 || "type".equals(namePhotoAttribute) || "filename".equals(namePhotoAttribute)) {
-                            if (BeanUtils.getProperty(attachements.get(i), namePhotoAttribute) != null) {
+                            if (BeanUtils.getProperty(attachments.get(i), namePhotoAttribute) != null) {
                                 throw new AirtableException("Property " + namePhotoAttribute + " should be null!");
                             }
                         }
@@ -839,8 +577,8 @@ public class Table<T> {
      * @throws InvocationTargetException
      * @throws NoSuchMethodException
      */
-    private String getIdOfItem(T item) throws AirtableException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-
+    private String getIdOfItem(T item) throws AirtableException, IllegalAccessException, InvocationTargetException,
+            NoSuchMethodException {
         if (propertyExists(item, FIELD_ID)) {
             final String id = BeanUtils.getProperty(item, FIELD_ID);
             if (id != null) {
@@ -862,7 +600,6 @@ public class Table<T> {
      * @throws NoSuchMethodException
      */
     private T filterFields(T item) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-
         final Field[] attributes = item.getClass().getDeclaredFields();
 
         for (Field attribute : attributes) {
