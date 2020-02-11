@@ -14,7 +14,7 @@ public class AirtableTest {
                 .endpointUrl("http://test.com")
                 .build();
         Airtable airtable = new Airtable(configuration);
-        assertNotNull(airtable.base("test-base"));
+        assertNotNull(airtable.buildBase("test-base"));
     }
 
     @Test

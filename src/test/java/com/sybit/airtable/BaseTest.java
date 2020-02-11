@@ -18,12 +18,7 @@ public class BaseTest {
 
     private Airtable airtable = new Airtable(Configuration.builder().apiKey("123").endpointUrl("http://localhost")
             .build());
-    private Base base = new Base("base", airtable);
-
-    @Test
-    public void getAirtableTest() {
-        assertEquals(airtable, base.getAirtable());
-    }
+    private Base base = airtable.buildBase("base");
 
     @Test
     public void getNameTest() {
@@ -31,19 +26,19 @@ public class BaseTest {
     }
 
     @Test
-    public void recordsTableTest() {
-        Table<Records> table = base.table("test-table");
+    public void buildRecordsTableTest() {
+        Table<Records> table = base.buildTable("test-table");
         assertNotNull(table);
-        assertSame(table, base.table("test-table"));
-        assertNotSame(table, base.table("test-table-2"));
+        assertSame(table, base.buildTable("test-table"));
+        assertNotSame(table, base.buildTable("test-table-2"));
     }
 
     @Test
-    public void tableTest() {
-        Table<String> table = base.table("test-table", String.class);
+    public void buildTableTest() {
+        Table<String> table = base.buildTable("test-table", String.class);
         assertNotNull(table);
-        assertSame(table, base.table("test-table", String.class));
-        assertNotSame(table, base.table("test-table", Integer.class));
-        assertNotSame(table, base.table("test-table-2", String.class));
+        assertSame(table, base.buildTable("test-table", String.class));
+        assertNotSame(table, base.buildTable("test-table", Integer.class));
+        assertNotSame(table, base.buildTable("test-table-2", String.class));
     }
 }

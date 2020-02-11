@@ -49,20 +49,15 @@ public class Table<T> {
     private static final String FIELD_CREATED_TIME = "createdTime";
 
     private final String name;
+    private final String url;
+    private final String apiKey;
     private final Class<T> type;
-    private final Base parent;
 
-    /**
-     * Constructor of Table.
-     * 
-     * @param name Name of Table
-     * @param type Class to map the rows.
-     * @param base Base containing table.
-     */
-    public Table(String name, Class<T> type, Base base) {
-        this.name = Objects.requireNonNull(name);
-        this.type = Objects.requireNonNull(type);
-        this.parent = base;
+    Table(String name, String baseUrl, String apiKey, Class<T> type) {
+        this.name = Objects.requireNonNull(name, "name cannot be null");
+        this.apiKey = Objects.requireNonNull(apiKey, "apiKey cannot be null");
+        this.type = Objects.requireNonNull(type, "type cannot be null");
+        url = Objects.requireNonNull(baseUrl, "baseUrl cannot be null") + "/" + name;
     }
 
     /**
@@ -410,19 +405,12 @@ public class Table<T> {
     }
 
     /**
-     * @return the parent {@link Base}
-     */
-    private Base base() {
-        return parent;
-    }
-
-    /**
      * Get the endpoint for the specified table.
      *
      * @return URL of tables endpoint.
      */
     private String getTableEndpointUrl() {
-        return base().getAirtable().getConfig().getEndpointUrl() + "/" + base().getName() + "/" + this.name;
+        return url;
     }
 
     /**
@@ -431,7 +419,7 @@ public class Table<T> {
      * @return the bearer token
      */
     private String getBearerToken() {
-        return "Bearer " + base().getAirtable().getConfig().getApiKey();
+        return "Bearer " + apiKey;
     }
 
     private T transform(Map<String, Object> record, T retval) throws InvocationTargetException, IllegalAccessException {

@@ -13,11 +13,11 @@ import org.junit.Test;
 public class TableTest {
 
     private Airtable airtable = new Airtable(Configuration.builder().apiKey("123").endpointUrl("https://url").build());
-    private Base base = new Base("base", airtable);
+    private Base base = airtable.buildBase("base");
 
     @Test
     public void key2properties() {
-        Table<Actor> table = new Table<>("table", Actor.class, base);
+        Table<Actor> table = base.buildTable("table", Actor.class);
 
         String actual = table.key2property("FirstName");
         Assert.assertEquals("firstName", actual);
@@ -28,14 +28,14 @@ public class TableTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void key2properties_EmptyArgument() {
-        Table<Actor> table = new Table<>("table", Actor.class, base);
+        Table<Actor> table = base.buildTable("table", Actor.class);
         table.key2property("");
         Assert.fail();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void key2properties_NullArgument() {
-        Table<Actor> table = new Table<>("table", Actor.class, base);
+        Table<Actor> table = base.buildTable("table", Actor.class);
         table.key2property(null);
         Assert.fail();
     }

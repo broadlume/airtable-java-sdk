@@ -67,7 +67,7 @@ public class Airtable {
      * @param base the base id.
      * @return the base
      */
-    public Base base(String base) {
-        return new Base(base, this);
+    public Base buildBase(String base) {
+        return new Base(base, getConfig().getEndpointUrl() + "/" + base, getConfig().getApiKey());
     }
 }

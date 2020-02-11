@@ -20,25 +20,20 @@ import lombok.Value;
 public class Base {
 
     private final Map<TableKey, Table<?>> tableMap = new ConcurrentHashMap<>();
-    private final String baseName;
-    private final Airtable parent;
+    private final String name;
+    private final String url;
+    private final String apiKey;
 
     /**
      * Create Airtable Base with given baseName ID.
      * @param name base ID could be found at https://airtable.com if you select your current baseName.
-     * @param airtable parent airtable object
+     * @param airtableUrl the URL to access airtable
+     * @param apiKey the API key
      */
-    public Base(String name, Airtable airtable) {
-        this.baseName = Objects.requireNonNull(name, "name cannot be null");
-        this.parent = Objects.requireNonNull(airtable, "parent cannot be null");
-    }
-
-    /**
-     * Get Airtable object as parent.
-     * @return the parent
-     */
-    public Airtable getAirtable() {
-        return parent;
+    Base(String name, String airtableUrl, String apiKey) {
+        this.name = Objects.requireNonNull(name, "name cannot be null");
+        this.apiKey = Objects.requireNonNull(apiKey, "apiKey cannot be null");
+        url = Objects.requireNonNull(airtableUrl, "airtableUrl cannot be null") + "/" + name;
     }
 
     /**
@@ -46,7 +41,7 @@ public class Base {
      * @return baseName id
      */
     public String getName() {
-        return baseName;
+        return name;
     }
 
     /**
@@ -54,8 +49,8 @@ public class Base {
      * @param name Name of required table.
      * @return Object to access table.
      */
-    public Table<Records> table(String name) {
-        return table(name, Records.class);
+    public Table<Records> buildTable(String name) {
+        return buildTable(name, Records.class);
     }
 
     /**
@@ -65,9 +60,13 @@ public class Base {
      * @return Object to access table.
      */
     @SuppressWarnings("unchecked")
-    public <T> Table<T> table(String name, Class<T> clazz) {
+    public <T> Table<T> buildTable(String name, Class<T> clazz) {
         TableKey key = new TableKey(name, clazz);
-        return  (Table<T>) tableMap.computeIfAbsent(key, k -> new Table<>(name, clazz, this));
+        return  (Table<T>) tableMap.computeIfAbsent(key, k -> createTable(name, clazz));
+    }
+
+    private <T> Table<T> createTable(String name, Class<T> clazz) {
+        return new Table<>(name, url, apiKey, clazz);
     }
 
     @Value
