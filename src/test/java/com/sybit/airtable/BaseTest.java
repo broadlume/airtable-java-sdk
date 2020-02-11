@@ -6,49 +6,44 @@
  */
 package com.sybit.airtable;
 
-import org.junit.Before;
+import com.sybit.airtable.vo.Records;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
-/**
- *
- * @author fzr
- */
 public class BaseTest {
-    
-    private Airtable airtable;
-    
-    @Before
-    public void before() {
-        this.airtable = new Airtable(Configuration.builder().setApiKey("123").setEndpointUrl("http://localhost").build());
-    }
-    
+
+    private Airtable airtable = new Airtable(Configuration.builder().setApiKey("123").setEndpointUrl("http://localhost")
+            .build());
+    private Base base = new Base("base", airtable);
+
     @Test
-    public void baseTest(){
-    
-        Base base = new Base("base", this.airtable);
-        assertNotNull(base);        
-    }
-    
-    
-    @Test
-    public void airtableTest(){
-    
-        Base base = new Base("base", this.airtable);
-        assertEquals(base.airtable(),this.airtable);
-    }
-    
-    @Test
-    public void baseNameTest(){
-        
-        Base base = new Base("base", this.airtable);
-        assertEquals(base.name(),"base");
+    public void getAirtableTest() {
+        assertEquals(airtable, base.getAirtable());
     }
 
-    @Test(expected = NullPointerException.class )
-    public void baseAssertationTest() {
-        new Base(null,null);
+    @Test
+    public void getNameTest() {
+        assertEquals("base", base.getName());
+    }
+
+    @Test
+    public void recordsTableTest() {
+        Table<Records> table = base.table("test-table");
+        assertNotNull(table);
+        assertSame(table, base.table("test-table"));
+        assertNotSame(table, base.table("test-table-2"));
+    }
+
+    @Test
+    public void tableTest() {
+        Table<String> table = base.table("test-table", String.class);
+        assertNotNull(table);
+        assertSame(table, base.table("test-table", String.class));
+        assertNotSame(table, base.table("test-table", Integer.class));
+        assertNotSame(table, base.table("test-table-2", String.class));
     }
 }

@@ -16,37 +16,40 @@ import java.util.Objects;
 
 /**
  * Representation Class of Airtable Base.
- *
  * @since 0.1
  */
 public class Base {
 
-    private static final Logger LOG = LoggerFactory.getLogger( Base.class );
+    private static final Logger LOG = LoggerFactory.getLogger(Base.class);
 
     private final Map<TableKey, Table<?>> tableMap = new HashMap<>();
-
     private final String baseName;
-
     private final Airtable parent;
-
 
     /**
      * Create Airtable Base with given baseName ID.
-     *
      * @param name base ID could be found at https://airtable.com if you select your current baseName.
      * @param airtable parent airtable object
      */
     public Base(String name, Airtable airtable) {
-        this.baseName = Objects.requireNonNull(name);
-        this.parent = Objects.requireNonNull(airtable);
+        this.baseName = Objects.requireNonNull(name, "name cannot be null");
+        this.parent = Objects.requireNonNull(airtable, "parent cannot be null");
     }
-    
+
     /**
      * Get Airtable object as parent.
      * @return the parent
      */
-    public Airtable airtable() {
+    public Airtable getAirtable() {
         return parent;
+    }
+
+    /**
+     * Get baseName id of baseName.
+     * @return baseName id
+     */
+    public String getName() {
+        return baseName;
     }
 
     /**
@@ -68,22 +71,13 @@ public class Base {
     public <T> Table<T> table(String name, Class<T> clazz) {
         TableKey key = new TableKey(name, clazz);
         Table<T> table = (Table<T>) tableMap.get(key);
-        if(table == null) {
+        if (table == null) {
             LOG.debug("Create new instance for table [" + name + "]");
-            table = new Table<>(name, clazz);
-            table.setParent(this);
+            table = new Table<>(name, clazz, this);
             tableMap.put(key, table);
         }
 
         return table;
-    }
-
-    /**
-     * Get baseName id of baseName.
-     * @return baseName id
-     */
-    public String name() {
-        return baseName;
     }
 
     private static class TableKey {
