@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 class GsonObjectMapper implements ObjectMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger( GsonObjectMapper.class.getName() );
+    private static final Logger LOG = LoggerFactory.getLogger(GsonObjectMapper.class);
     private final Gson gson;
                 
     public GsonObjectMapper() {

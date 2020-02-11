@@ -6,13 +6,12 @@
  */
 package com.sybit.airtable;
 
-import com.sybit.airtable.vo.Records;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nonnull;
+import com.sybit.airtable.vo.Records;
+import lombok.Value;
 
 /**
  * Representation Class of Airtable Base.
@@ -20,9 +19,7 @@ import java.util.Objects;
  */
 public class Base {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Base.class);
-
-    private final Map<TableKey, Table<?>> tableMap = new HashMap<>();
+    private final Map<TableKey, Table<?>> tableMap = new ConcurrentHashMap<>();
     private final String baseName;
     private final Airtable parent;
 
@@ -70,53 +67,15 @@ public class Base {
     @SuppressWarnings("unchecked")
     public <T> Table<T> table(String name, Class<T> clazz) {
         TableKey key = new TableKey(name, clazz);
-        Table<T> table = (Table<T>) tableMap.get(key);
-        if (table == null) {
-            LOG.debug("Create new instance for table [" + name + "]");
-            table = new Table<>(name, clazz, this);
-            tableMap.put(key, table);
-        }
-
-        return table;
+        return  (Table<T>) tableMap.computeIfAbsent(key, k -> new Table<>(name, clazz, this));
     }
 
+    @Value
     private static class TableKey {
+
+        @Nonnull
         private final String name;
+        @Nonnull
         private final Class<?> clazz;
-
-        public TableKey(String name, Class<?> clazz) {
-            this.name = Objects.requireNonNull(name);
-            this.clazz = Objects.requireNonNull(clazz);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Class<?> getClazz() {
-            return clazz;
-        }
-
-        @Override
-        public String toString() {
-            return "TableKey{" +
-                    "name='" + name + '\'' +
-                    ", clazz=" + clazz +
-                    '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            TableKey tableKey = (TableKey) o;
-            return Objects.equals(name, tableKey.name) &&
-                    Objects.equals(clazz, tableKey.clazz);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name, clazz);
-        }
     }
 }
