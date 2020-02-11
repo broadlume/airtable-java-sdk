@@ -6,43 +6,31 @@
  */
 package com.sybit.airtable;
 
+import javax.annotation.Nonnull;
+import lombok.AllArgsConstructor;
+import lombok.Value;
+
 /**
  * Sorting of query results.
  *
  * @since 0.1
  */
+@Value
+@AllArgsConstructor
 public class Sort {
 
     public enum Direction {asc, desc}
 
+    @Nonnull
     private final String field;
-
+    @Nonnull
     private final Direction direction;
 
     /**
      * Sort ascending given field.
-     *
      * @param field name of field
      */
     public Sort(String field) {
         this(field, Direction.asc);
-    }
-    /**
-     * Sort given field by defined direction.
-     *
-     * @param field name of field
-     * @param direction sort direction
-     */
-    public Sort(String field, Direction direction) {
-        this.field = field;
-        this.direction = direction;
-    }
-
-    public String getField() {
-        return field;
-    }
-
-    public Direction getDirection() {
-        return direction;
     }
 }
