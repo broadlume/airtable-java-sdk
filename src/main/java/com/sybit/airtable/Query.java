@@ -9,6 +9,7 @@ package com.sybit.airtable;
 import java.util.List;
 import javax.annotation.Nullable;
 import lombok.Builder;
+import lombok.Singular;
 import lombok.Value;
 
 /**
@@ -21,8 +22,8 @@ import lombok.Value;
 public class Query {
 
     /** Fields to be loaded */
-    @Nullable
-    private final String[] fields;
+    @Singular
+    private final List<String> fields;
     /** the number of records per page */
     @Nullable
     private final Integer pageSize;
@@ -33,8 +34,8 @@ public class Query {
     @Nullable
     private final String view;
     /** sorting of result set. */
-    @Nullable
-    private final List<Sort> sort;
+    @Singular
+    private final List<Sort> sorts;
     /** Define a filter formula. see https://support.airtable.com/hc/en-us/articles/203255215-Formula-Field-Reference */
     @Nullable
     private final String filterByFormula;

@@ -6,43 +6,25 @@
  */
 package com.sybit.airtable.vo;
 
-/**
- *
- * @author fzr
- */
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+
+@Value
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonDeserialize(builder = Delete.DeleteBuilder.class)
 public class Delete {
     
     private boolean deleted;
     private String id;
 
-    /**
-     * @return the deleted
-     */
-    public boolean isDeleted() {
-        return deleted;
-    }
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class DeleteBuilder {
 
-    /**
-     * @param deleted the deleted to set
-     */
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
-
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-    
-    
-    
 }

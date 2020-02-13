@@ -6,7 +6,6 @@
  */
 package com.sybit.airtable.vo;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +15,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Records<T> {
+public class Record<T> {
 
-    private List<Record<T>> records;
-    private String offset;
+    private String id;
+    private T fields;
+    private String createdTime;
+
+    public static <T> Record<T> of(T fields) {
+        return new Record<>(null, fields, null);
+    }
+
+    public static <T> Record<T> of(String id, T fields, String createdTime) {
+        return new Record<>(id, fields, createdTime);
+    }
 }

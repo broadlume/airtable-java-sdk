@@ -29,7 +29,17 @@ public class Configuration {
     @Nonnull
     private final String apiKey;
     @Nullable
-    private final String proxy;
+    private final ProxyConfiguration proxy;
     @Nullable
-    private final Long timeout;
+    private final Integer timeout;
+
+    @Value
+    @Builder(toBuilder = true)
+    public static class ProxyConfiguration {
+
+        @Nonnull
+        private final String host;
+        @Nonnull
+        private final Integer port;
+    }
 }

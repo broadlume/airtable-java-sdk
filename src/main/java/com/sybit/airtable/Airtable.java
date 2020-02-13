@@ -6,68 +6,99 @@
  */
 package com.sybit.airtable;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import com.mashape.unirest.http.ObjectMapper;
-import com.mashape.unirest.http.Unirest;
-import com.sybit.airtable.converter.ListConverter;
-import com.sybit.airtable.converter.MapConverter;
-import com.sybit.airtable.vo.Attachment;
-import com.sybit.airtable.vo.Thumbnail;
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.converters.DateConverter;
-import org.apache.commons.beanutils.converters.DateTimeConverter;
-import org.apache.http.HttpHost;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sybit.airtable.internal.http.AirtableHttpClient;
+import org.asynchttpclient.DefaultAsyncHttpClientConfig;
+import org.asynchttpclient.Dsl;
+import org.asynchttpclient.proxy.ProxyServer;
 
-/**
- * Representation Class of Airtable. It is the entry class to access Airtable
- * data.
- * @since 0.1
- */
 public class Airtable {
 
     private final Configuration config;
+    private final AirtableHttpClient airtableHttpClient;
+    private final ObjectMapper objectMapper;
 
-    public Airtable(Configuration config) {
-        this(config, new GsonObjectMapper());
+    public static AirtableBuilder builder() {
+        return new AirtableBuilder();
     }
 
-    public Airtable(Configuration config, ObjectMapper objectMapper) {
-        this.config = Objects.requireNonNull(config, "configuration cannot be null");
-
-        if (config.getTimeout() != null)
-            Unirest.setTimeouts(config.getTimeout(), config.getTimeout());
-        if (config.getProxy() != null)
-            Unirest.setProxy(HttpHost.create(config.getProxy()));
-
-        Unirest.setObjectMapper(objectMapper);
-
-        // Add specific Converter for Date
-        DateTimeConverter dtConverter = new DateConverter();
-        dtConverter.setPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        ConvertUtils.register(dtConverter, Date.class);
-
-        ListConverter listConverter = new ListConverter();
-        listConverter.setListClass(Attachment.class);
-        ConvertUtils.register(listConverter, List.class);
-
-        MapConverter mapConverter = new MapConverter();
-        mapConverter.setMapClass(Thumbnail.class);
-        ConvertUtils.register(mapConverter, Map.class);
-    }
-
-    public Configuration getConfig() {
-        return config;
+    private Airtable(Configuration config, AirtableHttpClient airtableHttpClient, ObjectMapper objectMapper) {
+        this.config = Objects.requireNonNull(config, "config cannot be null");
+        this.airtableHttpClient = Objects.requireNonNull(airtableHttpClient, "airtableHttpClient cannot be null");
+        this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper cannot be null");
     }
 
     /**
-     * Builder method to create base of given base id.
-     * @param base the base id.
-     * @return the base
+     * Build a new asynchronous client for accessing an Airtable table
+     * @param baseName the name of the base containing the table
+     * @param tableId the ID of the table (not the same as the table name)
+     * @param clazz the class the table row data should be mapped to
+     * @param <T> the type for {@code clazz}
+     * @return the async table client
      */
-    public Base buildBase(String base) {
-        return new Base(base, getConfig().getEndpointUrl() + "/" + base, getConfig().getApiKey());
+    public <T> AsyncTable<T> buildAsyncTable(String baseName, String tableId, Class<T> clazz) {
+        String tableUrl = config.getEndpointUrl() + "/" + baseName + "/" + tableId;
+        return new AsyncTable<>(tableUrl, config.getApiKey(), clazz, airtableHttpClient, objectMapper);
+    }
+
+    /**
+     * Build a new synchronous client for accessing an Airtable table
+     * @param baseName the name of the base containing the table
+     * @param tableId the ID of the table (not the same as the table name)
+     * @param clazz the class the table row data should be mapped to
+     * @param <T> the type for {@code clazz}
+     * @return the sync table client
+     */
+    public <T> SyncTable<T> buildSyncTable(String baseName, String tableId, Class<T> clazz) {
+        return new SyncTable<>(buildAsyncTable(baseName, tableId, clazz));
+    }
+
+    public static class AirtableBuilder {
+
+        private Configuration config;
+        private AirtableHttpClient airtableHttpClient;
+        private ObjectMapper objectMapper;
+
+        /** @param config the configuration for accessing Airtable, must be set before calling {@link #build()} */
+        public AirtableBuilder config(Configuration config) {
+            this.config = config;
+            return this;
+        }
+
+        /** @param airtableHttpClient the client to use to access Airtable, will use a default if not set */
+        public AirtableBuilder airtableHttpClient(AirtableHttpClient airtableHttpClient) {
+            this.airtableHttpClient = airtableHttpClient;
+            return this;
+        }
+
+        /** @param objectMapper the mapper to use to serialize and deserialize JSON, will use a default if not set */
+        public AirtableBuilder objectMapper(ObjectMapper objectMapper) {
+            this.objectMapper = objectMapper;
+            return this;
+        }
+
+        public Airtable build() {
+            Objects.requireNonNull(config, "config cannot be null");
+            ObjectMapper mapper = objectMapper;
+            AirtableHttpClient client = airtableHttpClient;
+            if (mapper == null)
+                mapper = new ObjectMapper();
+            if (client == null)
+                client = buildHttpClient(config, objectMapper);
+            return new Airtable(config, client, mapper);
+        }
+
+        private AirtableHttpClient buildHttpClient(Configuration config, ObjectMapper objectMapper) {
+            DefaultAsyncHttpClientConfig.Builder builder = new DefaultAsyncHttpClientConfig.Builder();
+            if (config.getTimeout() != null) {
+                builder.setRequestTimeout(config.getTimeout());
+                builder.setReadTimeout(config.getTimeout());
+            }
+            if (config.getProxy() != null)
+                builder.setProxyServer(new ProxyServer.Builder(config.getProxy().getHost(), config.getProxy().getPort()).build());
+
+            return new AirtableHttpClient(Dsl.asyncHttpClient(builder), objectMapper);
+        }
     }
 }
