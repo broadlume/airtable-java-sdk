@@ -108,7 +108,7 @@ public class RetryWithDelay implements Function<Flowable<Throwable>, Publisher<?
 
         /**
          * Set the minimum number of seconds to wait between attempts, default value is 30
-         * @param waitMin the min seconds, must be > 0 and < waitMax
+         * @param waitMin the min seconds, must be greater than 0 and less than waitMax
          * @return this builder
          */
         public Builder waitMin(int waitMin) {
@@ -120,7 +120,7 @@ public class RetryWithDelay implements Function<Flowable<Throwable>, Publisher<?
 
         /**
          * Set the maximum number of seconds to wait between attempts, default value is 36
-         * @param waitMax the max seconds, must be > 0
+         * @param waitMax the max seconds, must be greater than 0 and waitMin
          * @return this builder
          */
         public Builder waitMax(int waitMax) {

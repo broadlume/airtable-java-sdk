@@ -27,17 +27,17 @@ public class AirtableServerException extends AirtableException {
         this.error = error;
     }
 
-    /** the HTTP status code */
+    /** @return the HTTP status code */
     public int getStatusCode() {
         return statusCode;
     }
 
-    /** the HTTP status text */
+    /** @return the HTTP status text */
     public String getStatusText() {
         return statusText;
     }
 
-    /** the error returned from Airtable */
+    /** @return the error returned from Airtable */
     @Nullable
     public Error getError() {
         return error;

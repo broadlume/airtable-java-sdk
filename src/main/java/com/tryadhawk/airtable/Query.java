@@ -12,34 +12,29 @@ import lombok.Builder;
 import lombok.Singular;
 import lombok.Value;
 
-/**
- * Interface for specific queries.
- *
- * @since 0.1
- */
 @Value
 @Builder(toBuilder = true)
 public class Query {
 
-    /** Fields to be loaded */
+    /* Fields to be retrieved, if not set all fields will be retrieved */
     @Singular
     private final List<String> fields;
-    /** the number of records per page */
+    /* Number of records per page, default is 100, max is 100 */
     @Nullable
     private final Integer pageSize;
-    /** number of max rows to load. */
+    /* Max number of rows to retrieve */
     @Nullable
     private final Integer maxRecords;
-    /** Name of view to load. */
+    /* Name or ID of a view in the table. If set, only records in that view will be returned */
     @Nullable
     private final String view;
-    /** sorting of result set. */
+    /* Sorting of result set */
     @Singular
     private final List<Sort> sorts;
-    /** Define a filter formula. see https://support.airtable.com/hc/en-us/articles/203255215-Formula-Field-Reference */
+    /* Define a filter formula. see https://support.airtable.com/hc/en-us/articles/203255215-Formula-Field-Reference */
     @Nullable
     private final String filterByFormula;
-    /** Offset to get more than 100 records. */
+    /* Offset to start at for pagination */
     @Nullable
     private final String offset;
 }

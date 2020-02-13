@@ -60,19 +60,31 @@ public class Airtable {
         private AirtableHttpClient airtableHttpClient;
         private ObjectMapper objectMapper;
 
-        /** @param config the configuration for accessing Airtable, must be set before calling {@link #build()} */
+        /**
+         * Set the configuration, must be set before calling {@link #build()}
+         * @param config the configuration for accessing Airtable
+         * @return this builder
+         */
         public AirtableBuilder config(Configuration config) {
             this.config = config;
             return this;
         }
 
-        /** @param airtableHttpClient the client to use to access Airtable, will use a default if not set */
+        /**
+         * Set the client to use to access Airtable, will use a default if not set
+         * @param airtableHttpClient the client to use to access Airtable
+         * @return this builder
+         */
         public AirtableBuilder airtableHttpClient(AirtableHttpClient airtableHttpClient) {
             this.airtableHttpClient = airtableHttpClient;
             return this;
         }
 
-        /** @param objectMapper the mapper to use to serialize and deserialize JSON, will use a default if not set */
+        /**
+         * Set the mapper to use to serialize and deserialize JSON, will use a default if not set
+         * @param objectMapper the mapper to use
+         * @return this builder
+         */
         public AirtableBuilder objectMapper(ObjectMapper objectMapper) {
             this.objectMapper = objectMapper;
             return this;
