@@ -97,7 +97,7 @@ public class Airtable {
             if (mapper == null)
                 mapper = new ObjectMapper();
             if (client == null)
-                client = buildHttpClient(config, objectMapper);
+                client = buildHttpClient(config, mapper);
             return new Airtable(config, client, mapper);
         }
 
