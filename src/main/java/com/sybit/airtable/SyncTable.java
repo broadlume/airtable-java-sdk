@@ -9,7 +9,7 @@ package com.sybit.airtable;
 import java.util.List;
 import java.util.Objects;
 import com.sybit.airtable.exception.AirtableException;
-import com.sybit.airtable.vo.Record;
+import com.sybit.airtable.v0.Record;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 

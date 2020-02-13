@@ -7,7 +7,7 @@
 package com.sybit.airtable;
 
 import com.sybit.airtable.test.DummyRow;
-import com.sybit.airtable.vo.Record;
+import com.sybit.airtable.v0.Record;
 import io.reactivex.Flowable;
 import org.junit.Test;
 

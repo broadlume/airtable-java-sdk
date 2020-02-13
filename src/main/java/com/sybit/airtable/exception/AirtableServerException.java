@@ -1,7 +1,7 @@
 package com.sybit.airtable.exception;
 
 import javax.annotation.Nullable;
-import com.sybit.airtable.vo.Error;
+import com.sybit.airtable.v0.Error;
 
 /**
  * Airtable exception for an error returned from an Airtable server

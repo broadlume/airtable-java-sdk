@@ -1,4 +1,4 @@
-package com.sybit.airtable.vo;
+package com.sybit.airtable.v0;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
