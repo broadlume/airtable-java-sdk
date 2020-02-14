@@ -1,13 +1,7 @@
-/*
- * The MIT License (MIT)
- * Copyright (c) 2017 Sybit GmbH
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- */
-
 plugins {
     id 'java-library'
     id 'jacoco'
+    id 'signing'
     id 'maven-publish'
     id 'io.freefair.lombok' version '4.1.6'
 }
@@ -72,6 +66,46 @@ publishing {
         maven(MavenPublication) {
             artifactId rootProject.name
             from components.java
+
+            pom {
+                name = 'com.tryadhawk:airtable-java'
+                description = 'Java client for the Airtable API'
+                url = 'https://github.com/adHawk/airtable-java'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/mit-license.php'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'cwilbur12'
+                        name = 'Cory Wilbur'
+                        email = 'cory.wilbur@tryadhawk.com'
+                    }
+                    developer {
+                        id = 'twinklehawk'
+                        name = 'Alex Daidone'
+                        email = 'alex.daidone@tryadhawk.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:adHawk/airtable-java.git'
+                    developerConnection = 'scm:git:git@github.com:adHawk/airtable-java.git'
+                    url = 'https://github.com/adHawk/airtable-java'
+                }
+            }
         }
     }
+}
+
+ext.runSigning = project.hasProperty('runSigning') && runSigning.toBoolean()
+tasks.withType(Sign) {
+    onlyIf { runSigning }
+}
+signing {
+    def signingKey = System.getenv('SIGNING_KEY')
+    def signingPassword = System.getenv('SIGNING_PASSWORD')
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.maven
 }
