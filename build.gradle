@@ -54,14 +54,11 @@ jacocoTestReport {
 publishing {
     repositories {
         maven {
-            name = 'bintray'
-            def bintrayUsername = 'twinklehawk'
-            def bintrayRepoName = 'maven'
-            def bintrayPackageName = 'com.tryadhawk.airtable-java'
-            url = "https://api.bintray.com/maven/$bintrayUsername/$bintrayRepoName/$bintrayPackageName/;publish=1"
+            name = 'ossrh'
+            url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
             credentials {
-                username = System.getenv('BINTRAY_USER')
-                password = System.getenv('BINTRAY_API_KEY')
+                username = System.getenv('SONATYPE_USER')
+                password = System.getenv('SONATYPE_PASSWORD')
             }
         }
     }
