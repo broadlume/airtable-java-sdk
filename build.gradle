@@ -1,10 +1,3 @@
-/*
- * The MIT License (MIT)
- * Copyright (c) 2017 Sybit GmbH
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- */
-
 plugins {
     id 'java-library'
     id 'jacoco'
@@ -76,6 +69,35 @@ publishing {
         maven(MavenPublication) {
             artifactId rootProject.name
             from components.java
+
+            pom {
+                name = 'com.tryadhawk:airtable-java'
+                description = 'Java client for the Airtable API'
+                url = 'https://github.com/adHawk/airtable-java'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/mit-license.php'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'cwilbur12'
+                        name = 'Cory Wilbur'
+                        email = 'cory.wilbur@tryadhawk.com'
+                    }
+                    developer {
+                        id = 'twinklehawk'
+                        name = 'Alex Daidone'
+                        email = 'alex.daidone@tryadhawk.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:adHawk/airtable-java.git'
+                    developerConnection = 'scm:git:git@github.com:adHawk/airtable-java.git'
+                    url = 'https://github.com/adHawk/airtable-java'
+                }
+            }
         }
     }
 }
