@@ -8,6 +8,7 @@
 plugins {
     id 'java-library'
     id 'jacoco'
+    id 'signing'
     id 'maven-publish'
     id 'io.freefair.lombok' version '4.1.6'
 }
@@ -77,4 +78,15 @@ publishing {
             from components.java
         }
     }
+}
+
+ext.runSigning = project.hasProperty('runSigning') && runSigning.toBoolean()
+tasks.withType(Sign) {
+    onlyIf { runSigning }
+}
+signing {
+    def signingKey = System.getenv('SIGNING_KEY')
+    def signingPassword = System.getenv('SIGNING_PASSWORD')
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.maven
 }
