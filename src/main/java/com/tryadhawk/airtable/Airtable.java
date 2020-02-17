@@ -31,27 +31,27 @@ public class Airtable {
 
     /**
      * Build a new asynchronous client for accessing an Airtable table
-     * @param baseName the name of the base containing the table
+     * @param baseId the id of the base containing the table
      * @param tableName the name of the table
      * @param clazz the class the table row data should be mapped to
      * @param <T> the type for {@code clazz}
      * @return the async table client
      */
-    public <T> AsyncTable<T> buildAsyncTable(String baseName, String tableName, Class<T> clazz) {
-        String tableUrl = config.getEndpointUrl() + "/" + baseName + "/" + tableName;
+    public <T> AsyncTable<T> buildAsyncTable(String baseId, String tableName, Class<T> clazz) {
+        String tableUrl = config.getEndpointUrl() + "/" + baseId + "/" + tableName;
         return new AsyncTable<>(tableUrl, config.getApiKey(), clazz, airtableHttpClient, objectMapper);
     }
 
     /**
      * Build a new synchronous client for accessing an Airtable table
-     * @param baseName the name of the base containing the table
+     * @param baseId the id of the base containing the table
      * @param tableName the name of the table
      * @param clazz the class the table row data should be mapped to
      * @param <T> the type for {@code clazz}
      * @return the sync table client
      */
-    public <T> SyncTable<T> buildSyncTable(String baseName, String tableName, Class<T> clazz) {
-        return new SyncTable<>(buildAsyncTable(baseName, tableName, clazz));
+    public <T> SyncTable<T> buildSyncTable(String baseId, String tableName, Class<T> clazz) {
+        return new SyncTable<>(buildAsyncTable(baseId, tableName, clazz));
     }
 
     public static class AirtableBuilder {

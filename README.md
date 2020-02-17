@@ -47,9 +47,9 @@ Add airtable-java to the `dependencies` section of your `pom.xml`
 Airtable airtable = Airtable.builder()
     .config(Configuration.builder().apiKey("API_KEY").build())
     .build()
-    .buildAsyncTable("BASE_NAME", "TABLE_NAME", SomeClass.class);
+    .buildAsyncTable("BASE_ID", "TABLE_NAME", SomeClass.class);
 ```
-where API_KEY is the key to authenticate to the Airtable API, BASE_NAME is the name of the Airtable Base, TABLE_NAME is 
+where API_KEY is the key to authenticate to the Airtable API, BASE_ID is the ID of the Airtable Base (found in Airtable API documentation), TABLE_NAME is 
 the name of the table to access, and `SomeClass` is the class to map row data to.
 
 See [How do I get my API key](https://support.airtable.com/hc/en-us/articles/219046777-How-do-I-get-my-API-key) for 
