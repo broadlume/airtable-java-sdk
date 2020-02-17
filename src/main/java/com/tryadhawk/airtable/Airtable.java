@@ -31,7 +31,7 @@ public class Airtable {
 
     /**
      * Build a new asynchronous client for accessing an Airtable table
-     * @param baseId the name of the base containing the table
+     * @param baseId the id of the base containing the table
      * @param tableName the name of the table
      * @param clazz the class the table row data should be mapped to
      * @param <T> the type for {@code clazz}
@@ -44,7 +44,7 @@ public class Airtable {
 
     /**
      * Build a new synchronous client for accessing an Airtable table
-     * @param baseId the name of the base containing the table
+     * @param baseId the id of the base containing the table
      * @param tableName the name of the table
      * @param clazz the class the table row data should be mapped to
      * @param <T> the type for {@code clazz}
