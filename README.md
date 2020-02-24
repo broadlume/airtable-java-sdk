@@ -19,7 +19,7 @@ Add airtable-java to the `dependencies` section of your `build.gradle`:
 ```groovy
 dependencies {
     ...
-    implementation 'com.tryadhawk:airtable-java:2.0.2'
+    implementation 'com.tryadhawk:airtable-java:2.0.5'
     ...
 }
 ```
@@ -33,7 +33,7 @@ Add airtable-java to the `dependencies` section of your `pom.xml`
     <dependency>
         <groupId>com.tryadhawk</groupId>
         <artifactId>airtable-java</artifactId>
-        <version>2.0.2</version>
+        <version>2.0.5</version>
     </dependency>
     ...
 </dependencies>
