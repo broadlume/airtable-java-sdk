@@ -44,7 +44,7 @@ public class ReactiveUtilsTest {
     public void toSingleCancelledTest() throws ExecutionException, InterruptedException {
         when(future.isCancelled()).thenReturn(true);
         ReactiveUtils.fromFuture(() -> future)
-                .test().cancel();
+                .test().assertNotComplete();
         verify(future, never()).get();
     }
 }

@@ -9,8 +9,8 @@ import com.tryadhawk.airtable.test.DummyRow;
 import com.tryadhawk.airtable.v0.Delete;
 import com.tryadhawk.airtable.v0.Record;
 import com.tryadhawk.airtable.v0.Records;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 import org.asynchttpclient.Response;
 import org.junit.Test;
 

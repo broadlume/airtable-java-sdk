@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tryadhawk.airtable.exception.AirtableServerException;
 import com.tryadhawk.airtable.v0.Error;
 import com.tryadhawk.airtable.v0.ErrorWrapper;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Objects;
 import com.tryadhawk.airtable.exception.AirtableException;
 import com.tryadhawk.airtable.v0.Record;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Client for synchronously accessing an Airtable table
