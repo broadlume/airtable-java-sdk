@@ -1,7 +1,7 @@
 package com.tryadhawk.airtable.internal.reactive;
 
 import java.io.IOException;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

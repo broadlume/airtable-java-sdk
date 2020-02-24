@@ -8,7 +8,7 @@ package com.tryadhawk.airtable;
 
 import com.tryadhawk.airtable.test.DummyRow;
 import com.tryadhawk.airtable.v0.Record;
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

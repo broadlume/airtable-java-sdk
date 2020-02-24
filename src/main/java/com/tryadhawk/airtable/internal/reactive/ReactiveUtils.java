@@ -2,9 +2,9 @@ package com.tryadhawk.airtable.internal.reactive;
 
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
-import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleEmitter;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.asynchttpclient.ListenableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
