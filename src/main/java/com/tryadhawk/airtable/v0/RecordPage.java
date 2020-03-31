@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Records<T> {
+public class RecordPage<T> {
 
     private List<Record<T>> records;
     private String offset;

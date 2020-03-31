@@ -29,7 +29,7 @@ import com.tryadhawk.airtable.internal.http.MimeType;
 import com.tryadhawk.airtable.internal.http.QueryRequestBuilder;
 import com.tryadhawk.airtable.v0.Delete;
 import com.tryadhawk.airtable.v0.Record;
-import com.tryadhawk.airtable.v0.Records;
+import com.tryadhawk.airtable.v0.RecordPage;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import org.asynchttpclient.Request;
@@ -165,14 +165,14 @@ public class AsyncTable<T> {
      * @param query the query to execute
      * @return all result rows for the query
      */
-    private Flowable<Records<T>> executeQuery(Query query) {
+    private Flowable<RecordPage<T>> executeQuery(Query query) {
         return Single.just(query)
                 .map(q -> queryRequestBuilder.buildRequestForQuery(q, getTableUrl())
                         .setHeader("Accept", MimeType.APPLICATION_JSON)
                         .setHeader("Authorization", getAuthenticationHeader())
                         .build())
                 .flatMap(httpClient::execute)
-                .map(response -> parseResponseBodyAsRecords(response))
+                .map(response -> parseResponseBodyAsRecordPage(response))
                 .doOnError(e -> logger.warn("Failed to execute query {}", query))
                 .flatMapPublisher(records -> handleResponsePagination(records, query));
     }
@@ -183,8 +183,8 @@ public class AsyncTable<T> {
      * @param query the query used to fetch the current response
      * @return a Flowable of this set of records appended with the next set
      */
-    private Flowable<Records<T>> handleResponsePagination(Records<T> response, Query query) {
-        Flowable<Records<T>> f = Flowable.just(response);
+    private Flowable<RecordPage<T>> handleResponsePagination(RecordPage<T> response, Query query) {
+        Flowable<RecordPage<T>> f = Flowable.just(response);
         String offset = response.getOffset();
         if (offset != null) {
             logger.debug("Concatenating with next result set at offset {}", offset);
@@ -208,13 +208,13 @@ public class AsyncTable<T> {
     }
 
     /**
-     * Parse the body of a response as JSON into a {@link Records}
+     * Parse the body of a response as JSON into a {@link RecordPage}
      * @param response the response
-     * @return the parsed Records
+     * @return the parsed RecordPage
      * @throws AirtableMappingException if unable to parse the JSON
      */
-    private Records<T> parseResponseBodyAsRecords(Response response) {
-        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Records.class, type);
+    private RecordPage<T> parseResponseBodyAsRecordPage(Response response) {
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(RecordPage.class, type);
         return parseResponseBody(response, javaType);
     }
 

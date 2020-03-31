@@ -27,7 +27,7 @@ import com.tryadhawk.airtable.internal.http.AirtableHttpClient;
 import com.tryadhawk.airtable.test.DummyRow;
 import com.tryadhawk.airtable.v0.Delete;
 import com.tryadhawk.airtable.v0.Record;
-import com.tryadhawk.airtable.v0.Records;
+import com.tryadhawk.airtable.v0.RecordPage;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import org.asynchttpclient.Response;
@@ -60,7 +60,7 @@ public class AsyncTableTest {
                         arg.getHeaders().contains("Authorization", "Bearer 1234", false))))
                 .thenReturn(Single.just(response));
         when(response.getStatusCode()).thenReturn(200);
-        Records<DummyRow> records = new Records<>(Arrays.asList(
+        RecordPage<DummyRow> records = new RecordPage<>(Arrays.asList(
                 Record.of("123", new DummyRow("1", "name", 12), "today"),
                 Record.of("456", new DummyRow("2", "name2", 13), "tomorrow")), null);
         when(response.getResponseBody()).thenReturn(objectMapper.writeValueAsString(records));
@@ -85,11 +85,11 @@ public class AsyncTableTest {
                 .thenReturn(Single.just(response2));
 
         when(response.getStatusCode()).thenReturn(200);
-        when(response.getResponseBody()).thenReturn(objectMapper.writeValueAsString(new Records<>(Arrays.asList(
+        when(response.getResponseBody()).thenReturn(objectMapper.writeValueAsString(new RecordPage<>(Arrays.asList(
                 Record.of("123", new DummyRow("1", "name", 12), "today"),
                 Record.of("456", new DummyRow("2", "name2", 34), "tomorrow")), "abc")));
         when(response2.getStatusCode()).thenReturn(200);
-        when(response2.getResponseBody()).thenReturn(objectMapper.writeValueAsString(new Records<>(Arrays.asList(
+        when(response2.getResponseBody()).thenReturn(objectMapper.writeValueAsString(new RecordPage<>(Arrays.asList(
                 Record.of("789", new DummyRow("3", "name3", 56), "never"),
                 Record.of("098", new DummyRow("4", "name4", 78), "yesterday")), null)));
 
