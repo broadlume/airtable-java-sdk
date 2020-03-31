@@ -18,13 +18,16 @@
  */
 package com.tryadhawk.airtable;
 
+import java.util.Arrays;
 import com.tryadhawk.airtable.test.DummyRow;
 import com.tryadhawk.airtable.v0.Record;
+import com.tryadhawk.airtable.v0.RecordPage;
 import io.reactivex.rxjava3.core.Flowable;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +63,27 @@ public class SyncTableTest {
                 .hasSize(2)
                 .contains(record1)
                 .contains(record2);
+    }
+
+    @Test
+    public void selectPageTest() {
+        Record<DummyRow> record1 = Record.of("123", new DummyRow("1", "name", 12), "today");
+        Record<DummyRow> record2 = Record.of("456", new DummyRow("2", "name2", 13), "tomorrow");
+        RecordPage<DummyRow> page = new RecordPage<>(Arrays.asList(record1, record2), "abc123");
+        when(asyncTable.selectPage()).thenReturn(Flowable.just(page));
+
+        assertEquals(page, table.selectPage());
+    }
+
+    @Test
+    public void selectPageQueryTest() {
+        Query query = Query.builder().maxRecords(500).build();
+        Record<DummyRow> record1 = Record.of("123", new DummyRow("1", "name", 12), "today");
+        Record<DummyRow> record2 = Record.of("456", new DummyRow("2", "name2", 13), "tomorrow");
+        RecordPage<DummyRow> page = new RecordPage<>(Arrays.asList(record1, record2), "abc123");
+        when(asyncTable.selectPage(query)).thenReturn(Flowable.just(page));
+
+        assertEquals(page, table.selectPage(query));
     }
 
     @Test

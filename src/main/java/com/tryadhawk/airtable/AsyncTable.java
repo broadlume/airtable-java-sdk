@@ -86,7 +86,27 @@ public class AsyncTable<T> {
      */
     public Publisher<Record<T>> select(Query query) {
         return executeQuery(query)
+                .flatMapPublisher(records -> handleResponsePagination(records, query))
                 .flatMap(records -> Flowable.fromIterable(records.getRecords()));
+    }
+
+    /**
+     * Retrieve a page of all rows from the table
+     * @return a {@link Publisher} containing a single page of results or an {@link AirtableException} if an error occurs
+     */
+    public Publisher<RecordPage<T>> selectPage() {
+        return selectPage(Query.builder().build());
+    }
+
+    /**
+     * Retrieve a page of rows from the table matching a {@link Query}
+     * @param query the query
+     * @return a {@link Publisher} containing a single page of matching results or an {@link AirtableException} if an
+     * error occurs
+     */
+    public Publisher<RecordPage<T>> selectPage(Query query) {
+        return executeQuery(query)
+                .toFlowable();
     }
 
     /**
@@ -165,7 +185,7 @@ public class AsyncTable<T> {
      * @param query the query to execute
      * @return all result rows for the query
      */
-    private Flowable<RecordPage<T>> executeQuery(Query query) {
+    private Single<RecordPage<T>> executeQuery(Query query) {
         return Single.just(query)
                 .map(q -> queryRequestBuilder.buildRequestForQuery(q, getTableUrl())
                         .setHeader("Accept", MimeType.APPLICATION_JSON)
@@ -173,8 +193,7 @@ public class AsyncTable<T> {
                         .build())
                 .flatMap(httpClient::execute)
                 .map(response -> parseResponseBodyAsRecordPage(response))
-                .doOnError(e -> logger.warn("Failed to execute query {}", query))
-                .flatMapPublisher(records -> handleResponsePagination(records, query));
+                .doOnError(e -> logger.warn("Failed to execute query {}", query));
     }
 
     /**
@@ -188,7 +207,8 @@ public class AsyncTable<T> {
         String offset = response.getOffset();
         if (offset != null) {
             logger.debug("Concatenating with next result set at offset {}", offset);
-            f = f.concatWith(executeQuery(query.toBuilder().offset(offset).build()));
+            Query nextQuery = query.toBuilder().offset(offset).build();
+            f = f.concatWith(executeQuery(nextQuery).flatMapPublisher(p -> handleResponsePagination(p, nextQuery)));
         }
         return f;
     }

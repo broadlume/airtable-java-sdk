@@ -118,6 +118,32 @@ public class AsyncTableTest {
     }
 
     /**
+     * Should build the correct request, parse out the record JSON, and return a Publisher containing the single record page
+     */
+    @Test
+    public void selectPageTest() throws InterruptedException, JsonProcessingException {
+        when(httpClient.execute(argThat(arg ->
+                arg != null &&
+                        "https://localhost/base/table".equals(arg.getUrl()) &&
+                        "GET".equals(arg.getMethod()) &&
+                        arg.getHeaders().size() == 2 &&
+                        arg.getHeaders().contains("Accept", "application/json", false) &&
+                        arg.getHeaders().contains("Authorization", "Bearer 1234", false))))
+                .thenReturn(Single.just(response));
+        when(response.getStatusCode()).thenReturn(200);
+        RecordPage<DummyRow> records = new RecordPage<>(Arrays.asList(
+                Record.of("123", new DummyRow("1", "name", 12), "today"),
+                Record.of("456", new DummyRow("2", "name2", 13), "tomorrow")), null);
+        when(response.getResponseBody()).thenReturn(objectMapper.writeValueAsString(records));
+
+        Flowable.fromPublisher(table.selectPage())
+                .test().await()
+                .assertValueCount(1)
+                .assertValueAt(0, records)
+                .assertComplete().assertNoErrors();
+    }
+
+    /**
      * Should build the correct request, parse the response JSON, and return a Publisher containing the single response
      * record
      */
