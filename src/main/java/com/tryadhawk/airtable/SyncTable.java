@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import com.tryadhawk.airtable.exception.AirtableException;
 import com.tryadhawk.airtable.v0.Record;
+import com.tryadhawk.airtable.v0.RecordPage;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 
@@ -54,6 +55,25 @@ public class SyncTable<T> {
      */
     public List<Record<T>> select(Query query) {
         return Flowable.fromPublisher(asyncTable.select(query)).toList().blockingGet();
+    }
+
+    /**
+     * Retrieve a page of all rows from the table
+     * @return a single page of results
+     * @throws AirtableException if an error occurs
+     */
+    public RecordPage<T> selectPage() {
+        return Single.fromPublisher(asyncTable.selectPage()).blockingGet();
+    }
+
+    /**
+     * Retrieve a page of rows from the table matching a {@link Query}
+     * @param query the query
+     * @return a single page of matching results
+     * @throws AirtableException if an error occurs
+     */
+    public RecordPage<T> selectPage(Query query) {
+        return Single.fromPublisher(asyncTable.selectPage(query)).blockingGet();
     }
 
     /**
