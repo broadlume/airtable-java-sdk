@@ -89,7 +89,7 @@ publishing {
             pom {
                 name = 'com.tryadhawk:airtable-java'
                 description = 'Java client for the Airtable API'
-                url = 'https://github.com/adHawk/airtable-java'
+                url = 'https://github.com/broadlume/airtable-java'
                 licenses {
                     license {
                         name = 'MIT License'
@@ -100,18 +100,18 @@ publishing {
                     developer {
                         id = 'cwilbur12'
                         name = 'Cory Wilbur'
-                        email = 'cory.wilbur@tryadhawk.com'
+                        email = 'cory.wilbur@broadlume.com'
                     }
                     developer {
                         id = 'twinklehawk'
                         name = 'Alex Daidone'
-                        email = 'alex.daidone@tryadhawk.com'
+                        email = 'alex.daidone@broadlume.com'
                     }
                 }
                 scm {
-                    connection = 'scm:git:git@github.com:adHawk/airtable-java.git'
-                    developerConnection = 'scm:git:git@github.com:adHawk/airtable-java.git'
-                    url = 'https://github.com/adHawk/airtable-java'
+                    connection = 'scm:git:git@github.com:broadlume/airtable-java.git'
+                    developerConnection = 'scm:git:git@github.com:broadlume/airtable-java.git'
+                    url = 'https://github.com/broadlume/airtable-java'
                 }
             }
         }
