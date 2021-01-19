@@ -58,7 +58,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.1'
     testImplementation 'org.assertj:assertj-core:3.18.1'
-    testImplementation 'org.mockito:mockito-core:3.7.0'
+    testImplementation 'org.mockito:mockito-core:3.7.7'
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
 }
 
