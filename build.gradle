@@ -57,7 +57,7 @@ dependencies {
     api 'org.slf4j:slf4j-api:1.7.31'
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.assertj:assertj-core:3.19.0'
+    testImplementation 'org.assertj:assertj-core:3.20.2'
     testImplementation 'org.mockito:mockito-core:3.11.1'
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
 }
