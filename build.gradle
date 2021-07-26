@@ -54,7 +54,7 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
     api 'org.reactivestreams:reactive-streams:1.0.3'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.13'
-    api 'org.slf4j:slf4j-api:1.7.31'
+    api 'org.slf4j:slf4j-api:1.7.32'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.assertj:assertj-core:3.20.2'
