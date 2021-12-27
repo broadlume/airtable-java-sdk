@@ -57,7 +57,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.assertj:assertj-core:3.21.0'
     testImplementation 'org.mockito:mockito-core:4.2.0'
-    testImplementation 'ch.qos.logback:logback-classic:1.2.9'
+    testImplementation 'ch.qos.logback:logback-classic:1.2.10'
 }
 
 jacocoTestReport {
