@@ -1,6 +1,6 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.tryadhawk/airtable-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.tryadhawk/airtable-java)
 [![master build](https://github.com/adHawk/airtable-java/workflows/master%20build/badge.svg)](https://github.com/adHawk/airtable-java/actions?query=workflow%3A%22master+build%22)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/6003f4a94cb26e7f5298/test_coverage)](https://codeclimate.com/github/adHawk/airtable-java/test_coverage)
+<a href="https://codeclimate.com/github/broadlume/airtable-java-sdk/test_coverage"><img src="https://api.codeclimate.com/v1/badges/3caf34b98c2352b5689b/test_coverage" /></a>
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
 # airtable-java
