@@ -1,7 +1,7 @@
 name: master build
 on:
   push:
-    branches: master
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
           GIT_COMMIT_SHA: ${{ github.sha }}
-          GIT_BRANCH: master
+          GIT_BRANCH: main
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
           chmod +x ./cc-test-reporter
