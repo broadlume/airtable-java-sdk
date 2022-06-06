@@ -1,0 +1,21 @@
+queue_rules:
+  - name: default
+    conditions: [ ]
+
+pull_request_rules:
+# this will automatically approve any dependabot PRs after the pr-check
+# check succeeds
+  - name: automatic approval for dependabot PRs
+    conditions:
+      - author=dependabot[bot]
+      - check-success=build
+      - "#commits=1"
+    actions:
+      review:
+        type: APPROVE
+  - name: default merge queue
+    conditions:
+      - -label=hold
+    actions:
+      queue:
+        name: default
