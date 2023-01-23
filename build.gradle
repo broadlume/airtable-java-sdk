@@ -51,7 +51,7 @@ dependencies {
     api 'org.asynchttpclient:async-http-client:2.12.3'
     api 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
     api 'org.reactivestreams:reactive-streams:1.0.4'
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
     api 'org.slf4j:slf4j-api:2.0.6'
 
     testImplementation 'junit:junit:4.13.2'
